@@ -1,0 +1,1757 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-size="m">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>声迹 SOUNDTRACE · 声场档案 · 对话分析室</title>
+<style>
+/* ============================================================
+   声迹 SOUNDTRACE v4
+   四房间 · 粉紫 · 可爱 · 为听障者而做
+   ============================================================ */
+:root{
+  --paper:#FDF9FE; --paper-2:#F8F1FB; --paper-3:#F2E8F7;
+  --line:#EBDFF1; --line-soft:#F4ECF8;
+  --ink:#2E2439; --ink-2:#5F5270; --ink-3:#8E80A0; --ink-4:#B6A9C6;
+  --rose:#F472B6; --pink:#EC4899; --violet:#A78BFA; --purple:#8B5CF6;
+  --pink-l:#FBCFE8; --lilac:#DDD6FE; --mint:#34D399; --sky:#7DD3FC;
+  --grad-main:linear-gradient(135deg,#F472B6,#8B5CF6);
+  --grad-soft:linear-gradient(135deg,#FBCFE8,#DDD6FE);
+  --grad-mint:linear-gradient(90deg,#34D399,#A3E635);
+  --shadow-card:0 1px 0 rgba(255,255,255,.9) inset, 0 2px 0 -1px var(--line), 0 6px 16px -8px rgba(139,92,246,.22);
+  --shadow-lift:0 1px 0 rgba(255,255,255,.95) inset, 0 2px 0 -1px var(--line), 0 16px 34px -14px rgba(139,92,246,.38);
+  --floor-a:#F7EDFA; --floor-b:#EFE1F6;
+  --wall-l:#EADCF3; --wall-r:#E2D2EE; --wall-top:#F3E9F8; --wall-b:#EEDFF6;
+  --fs-base:15px; --fs-sub:13.5px; --fs-big:18px; --lh:1.7;
+  --sans:"HarmonyOS Sans SC","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  --serif:"Source Han Serif SC","Noto Serif SC","Songti SC","SimSun",serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Consolas,monospace;
+}
+html[data-size="s"]{ --fs-base:14px; --fs-sub:13px; --fs-big:16px; }
+html[data-size="l"]{ --fs-base:17px; --fs-sub:15.5px; --fs-big:22px; }
+html[data-size="xl"]{ --fs-base:19.5px; --fs-sub:18px; --fs-big:27px; --lh:1.8; }
+html[data-theme="dark"]{
+  --paper:#1F1A28; --paper-2:#282131; --paper-3:#31283C;
+  --line:#3E3449; --line-soft:#352D40;
+  --ink:#F6EFFB; --ink-2:#D3C7E0; --ink-3:#A192B2; --ink-4:#7E7090;
+  --shadow-card:0 1px 0 rgba(255,255,255,.045) inset, 0 2px 0 -1px #171320, 0 6px 16px -8px rgba(0,0,0,.65);
+  --shadow-lift:0 1px 0 rgba(255,255,255,.07) inset, 0 2px 0 -1px #171320, 0 16px 34px -14px rgba(0,0,0,.8);
+  --floor-a:#2F2739; --floor-b:#262030;
+  --wall-l:#3C3249; --wall-r:#342B41; --wall-top:#453A54; --wall-b:#3E344C;
+}
+html[data-contrast="high"]{
+  --ink:#000; --ink-2:#1a1420; --ink-3:#3a2f48; --ink-4:#5a4d68;
+  --line:#B9A6CB; --line-soft:#D8CBE4; --paper:#fff; --paper-2:#FBF7FE; --paper-3:#F3EAF9;
+}
+html[data-theme="dark"][data-contrast="high"]{
+  --ink:#fff; --ink-2:#F0E8FA; --ink-3:#D8CBEA; --ink-4:#BCAECC;
+  --line:#7A6A8E; --line-soft:#5E5072; --paper:#0E0A13; --paper-2:#171020; --paper-3:#211729;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink-2);font-family:var(--sans);
+  font-size:var(--fs-base);line-height:var(--lh);-webkit-font-smoothing:antialiased;
+  overflow:hidden;transition:background .3s,color .3s}
+button{font-family:inherit;font-size:inherit;color:inherit;background:none;border:none;cursor:pointer}
+::selection{background:rgba(236,72,153,.22)}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:5px}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;overflow:hidden}
+.screen.on{display:flex}
+.blob{position:absolute;border-radius:50%;pointer-events:none;z-index:0;
+  background:var(--grad-soft);opacity:.5;filter:blur(18px);animation:floaty 9s ease-in-out infinite}
+@keyframes floaty{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(8px,-14px) scale(1.08)}}
+
+/* ---------- 大厅 ---------- */
+#lobby{padding:0 46px;overflow-y:auto;position:relative}
+.lob-top{display:flex;align-items:center;justify-content:space-between;padding:44px 0 8px;
+  border-bottom:1px solid var(--line);flex-shrink:0;position:relative;z-index:2}
+.brand-wrap{display:flex;align-items:center;gap:13px}
+.brand{font-size:34px;font-weight:800;letter-spacing:-.025em;line-height:1;color:var(--ink)}
+.brand .grad-text{background:var(--grad-main);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.lob-sub{margin-top:9px;font-size:15.5px;color:var(--ink-3);letter-spacing:.1em}
+.lob-right{text-align:right}
+.lob-right .t1{font-size:15.5px;color:var(--ink-3);letter-spacing:.18em}
+.lob-right .t2{margin-top:5px;font-family:var(--mono);font-size:12.5px;color:var(--ink-4);letter-spacing:.16em}
+.slogan{position:relative;z-index:2;padding:24px 0 22px;font-size:clamp(19px,2.3vw,29px);
+  font-weight:800;letter-spacing:-.015em;color:var(--ink);line-height:1.55}
+.slogan em{font-style:normal;position:relative;display:inline-block}
+.slogan em:after{content:"";position:absolute;left:-2px;right:-2px;bottom:3px;height:9px;
+  background:var(--grad-soft);opacity:.85;border-radius:4px;z-index:-1}
+.rooms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;padding-bottom:22px;position:relative;z-index:2}
+.roomcard{position:relative;background:var(--paper);border:1.5px solid var(--line);border-radius:18px;
+  padding:19px 21px 15px;box-shadow:var(--shadow-card);cursor:pointer;overflow:hidden;
+  transition:transform .3s cubic-bezier(.2,.9,.3,1),box-shadow .3s,border-color .3s}
+.roomcard:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);border-color:#E0C9EF}
+.roomcard .rc-ill{position:absolute;right:14px;top:44px;opacity:.92;transition:.35s}
+.roomcard:hover .rc-ill{transform:scale(1.08) rotate(-4deg)}
+.rc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.rc-no{font-family:var(--mono);font-size:12.5px;letter-spacing:.18em;color:var(--ink-4)}
+.rc-state{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--ink-4);
+  display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:20px;padding:2px 8px}
+.rc-state.live{color:#0E9F6E;border-color:#BBF0DA;background:#F0FDF8}
+.rc-state .d{width:5px;height:5px;border-radius:50%;background:currentColor}
+.rc-state.live .d{animation:blink 1.6s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.rc-name{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1.2}
+.rc-desc{margin-top:7px;font-size:15px;color:var(--ink-3);line-height:1.65;max-width:72%}
+.rc-foot{display:flex;align-items:center;justify-content:space-between;margin-top:15px;
+  padding-top:11px;border-top:1px dashed var(--line)}
+.rc-tag{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--ink-4);
+  border:1px solid var(--line);border-radius:20px;padding:3px 9px}
+.rc-go{font-size:14.5px;color:var(--ink-3);display:flex;align-items:center;gap:6px;transition:.26s}
+.roomcard:hover .rc-go{color:var(--pink);gap:10px}
+.lob-foot{display:flex;align-items:center;justify-content:space-between;padding:14px 0 22px;
+  border-top:1px solid var(--line);flex-shrink:0;margin-top:auto;position:relative;z-index:2}
+.lob-foot .c{font-family:var(--mono);font-size:12.5px;letter-spacing:.13em;color:var(--ink-4)}
+.footbtns{display:flex;gap:8px}
+.pill{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;color:var(--ink-3);
+  border:1.5px solid var(--line);border-radius:20px;padding:6px 14px;transition:.24s;
+  display:flex;align-items:center;gap:6px}
+.pill:hover,.pill.act{color:var(--pink);border-color:var(--pink-l);background:#FEF5FB}
+
+/* ---------- 房间 ---------- */
+#room{background:var(--paper)}
+.topbar{height:56px;flex-shrink:0;display:flex;align-items:center;gap:14px;padding:0 22px;
+  border-bottom:1px solid var(--line);background:var(--paper);z-index:8;position:relative}
+.tb-back{display:flex;align-items:center;gap:8px;color:var(--ink-3);font-size:15px;transition:.2s;
+  border:1.5px solid var(--line);border-radius:20px;padding:4px 12px;white-space:nowrap}
+.tb-back:hover{color:var(--pink);border-color:var(--pink-l)}
+.tb-id{font-family:var(--mono);font-size:13px;letter-spacing:.15em;color:var(--ink-3);
+  display:flex;align-items:center;gap:6px;white-space:nowrap}
+.tb-id b{color:var(--ink)}
+.tb-mid{flex:1;display:flex;align-items:center;justify-content:center;gap:11px;
+  font-family:var(--mono);font-size:13px;letter-spacing:.12em;color:var(--ink-3)}
+.tb-mid .v{color:var(--ink);font-weight:700}
+.tb-mid .sep{width:1px;height:10px;background:var(--line)}
+.tb-live{display:flex;align-items:center;gap:5px;color:var(--pink)}
+.tb-live .d{width:6px;height:6px;border-radius:50%;background:var(--pink);animation:blink 1.4s infinite}
+.tb-acts{display:flex;align-items:center;gap:7px}
+.linebtn{font-size:14px;padding:6px 13px;border:1.5px solid var(--line);border-radius:20px;
+  color:var(--ink-2);transition:.24s;white-space:nowrap}
+.linebtn:hover{color:#fff;border-color:transparent;background:var(--grad-main)}
+.linebtn.ghost:hover{background:var(--ink);color:var(--paper)}
+
+.stage{flex:1;display:grid;grid-template-columns:1.85fr 5fr 2.9fr;overflow:hidden;min-height:0}
+.col{display:flex;flex-direction:column;overflow:hidden;min-height:0;position:relative}
+.col + .col{border-left:1px solid var(--line)}
+.colhead{flex-shrink:0;padding:14px 16px 11px;display:flex;align-items:center;gap:8px}
+.colhead h3{font-size:14px;font-weight:800;letter-spacing:.13em;color:var(--ink);text-transform:uppercase}
+.colhead .sub{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-4)}
+.switchbar{display:flex;margin-left:auto;gap:5px}
+.switchbar button{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink-4);
+  border:1.5px solid var(--line);border-radius:20px;padding:4px 10px;transition:.22s}
+.switchbar button.act{color:#fff;background:var(--grad-main);border-color:transparent}
+
+.fieldwrap{flex:1;padding:0 14px 8px;min-height:0;display:flex;flex-direction:column;gap:8px}
+.fieldbox{flex:1;position:relative;border:1.5px solid var(--line);border-radius:16px;
+  background:linear-gradient(170deg,var(--paper-2),var(--paper-3));
+  overflow:hidden;min-height:180px;perspective:820px}
+.axis-note{position:absolute;left:10px;top:8px;font-family:var(--mono);font-size:12px;
+  letter-spacing:.12em;color:var(--ink-4);z-index:6}
+
+/* 2D 场景 */
+.scene2d{position:absolute;inset:0}
+.scene2d .grid{position:absolute;inset:0;
+  background:linear-gradient(var(--line-soft) 1px,transparent 1px) 0 0/100% 30px,
+             linear-gradient(90deg,var(--line-soft) 1px,transparent 1px) 0 0/30px 100%}
+.scene2d.hide{display:none}
+.s2-shape{position:absolute;border:1.5px solid var(--line);background:var(--paper);
+  box-shadow:0 3px 0 -1px var(--line),0 8px 18px -10px rgba(139,92,246,.22)}
+.dot{position:absolute;width:32px;height:32px;margin:-16px 0 0 -16px;display:grid;place-items:center;z-index:3}
+.dot .core{width:12px;height:12px;border-radius:50%;background:var(--grad-main);
+  box-shadow:0 0 0 3px var(--paper),0 2px 7px -1px rgba(139,92,246,.42);transition:transform .3s}
+.dot .nm{position:absolute;top:20px;left:50%;transform:translateX(-50%);font-family:var(--mono);
+  font-size:11px;letter-spacing:.06em;color:var(--ink-3);white-space:nowrap}
+.dot.on .core{transform:scale(1.32)}
+.dot.on .nm{color:var(--ink);font-weight:700}
+.ripple{position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;
+  border-radius:50%;border:1.5px solid var(--rose);pointer-events:none;
+  animation:rip 1.5s cubic-bezier(.2,.6,.4,1) forwards;opacity:0}
+@keyframes rip{0%{transform:scale(1);opacity:.85}100%{transform:scale(6);opacity:0}}
+.heat{position:absolute;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(244,114,182,.34),rgba(167,139,250,.12) 62%,transparent 70%)}
+
+/* 3D */
+.scene3d{position:absolute;inset:0;display:none;transform-style:preserve-3d}
+.scene3d.show{display:block}
+.room3d{position:absolute;left:50%;top:50%;width:250px;height:170px;margin:-85px 0 0 -125px;
+  transform-style:preserve-3d;transform:rotateX(56deg) rotateZ(-36deg);
+  transition:transform .7s cubic-bezier(.2,.9,.3,1)}
+.face{position:absolute;border:1.5px solid var(--line)}
+.face.floor{width:250px;height:170px;left:0;top:0;
+  background:repeating-linear-gradient(90deg,transparent 0 41px,var(--line-soft) 41px 42px),
+    repeating-linear-gradient(0deg,transparent 0 33px,var(--line-soft) 33px 34px),
+    linear-gradient(160deg,var(--floor-a),var(--floor-b));
+  box-shadow:inset 0 0 50px rgba(167,139,250,.09)}
+.face.wall-b{width:250px;height:78px;left:0;top:0;transform-origin:0 0;transform:rotateX(-90deg);
+  background:linear-gradient(180deg,var(--wall-top),var(--wall-b))}
+.face.wall-l{width:170px;height:78px;left:0;top:0;transform-origin:0 0;
+  transform:rotateY(90deg) rotateZ(90deg);background:linear-gradient(90deg,var(--wall-l),var(--wall-top))}
+.face.wall-r{width:170px;height:78px;left:250px;top:0;transform-origin:0 0;
+  transform:rotateY(-90deg) rotateZ(90deg);background:linear-gradient(90deg,var(--wall-top),var(--wall-r))}
+.desk3d{position:absolute;left:50%;top:50%;width:146px;height:94px;margin:-47px 0 0 -73px;
+  background:var(--paper);border:1.5px solid var(--line);border-radius:14px;
+  box-shadow:0 8px 18px -10px rgba(139,92,246,.34);transform:translateZ(16px)}
+.desk3d:after{content:"";position:absolute;inset:7px;border:1.5px dashed var(--line-soft);border-radius:10px}
+.spk3d{position:absolute;width:0;height:0;transform-style:preserve-3d}
+.spk3d .inner{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d;
+  transform:rotateX(-56deg) rotateZ(36deg)}
+.spk3d .beam{position:absolute;left:-2px;bottom:0;width:4px;height:0;border-radius:4px;
+  background:linear-gradient(to top,rgba(244,114,182,.95),rgba(139,92,246,.5));
+  transform-origin:bottom center;transition:height .45s cubic-bezier(.2,.9,.3,1);
+  box-shadow:0 0 10px rgba(244,114,182,.4)}
+.spk3d .base{position:absolute;left:-9px;top:-9px;width:18px;height:18px;border-radius:50%;
+  background:var(--grad-main);box-shadow:0 0 0 2.5px var(--paper),0 2px 8px rgba(139,92,246,.55);
+  transition:transform .3s;display:grid;place-items:center}
+.spk3d .base .face2{font-size:12px;line-height:1;color:#fff;font-weight:800}
+.spk3d.on .base{transform:scale(1.42)}
+.spk3d .wv{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;
+  border:1.5px solid var(--rose);opacity:0;transform:rotateX(90deg)}
+.spk3d.on .wv{animation:wv3d 1.7s cubic-bezier(.2,.6,.4,1) infinite}
+.spk3d.on .wv:nth-child(3){animation-delay:.6s}
+@keyframes wv3d{0%{transform:rotateX(90deg) scale(.4);opacity:.85}100%{transform:rotateX(90deg) scale(3.2);opacity:0}}
+.spk3d .tag3d{position:absolute;left:0;top:0;transform:translate(-50%,-170%);display:flex;
+  flex-direction:column;align-items:center;white-space:nowrap;pointer-events:none}
+.spk3d .tag3d .lb{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink-4);
+  background:var(--paper);border:1.25px solid var(--line);border-radius:5px;padding:1px 5px;transition:.3s}
+.spk3d.on .tag3d .lb{color:#fff;background:var(--grad-main);border-color:transparent;font-weight:700}
+
+.fieldctl{display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap}
+.tinybtn{font-family:var(--mono);font-size:11px;letter-spacing:.07em;color:var(--ink-3);
+  border:1.5px solid var(--line);border-radius:20px;padding:4px 10px;transition:.22s;
+  display:inline-flex;align-items:center;gap:4px}
+.tinybtn:hover{color:var(--ink);border-color:var(--ink-4)}
+.tinybtn.act{color:#fff;background:var(--grad-main);border-color:transparent}
+.legendrow{display:flex;flex-direction:column;gap:4px;padding:0 14px 12px;flex-shrink:0}
+.legendrow div{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.08em;color:var(--ink-4)}
+.legendrow i{width:12px;height:3px;border-radius:2px}
+
+/* ---------- 字幕区 ---------- */
+.subcol{padding:0 !important}
+.subarea{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.subhead{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:11px 18px 8px}
+.subhead h3{font-size:14px;font-weight:800;letter-spacing:.13em;color:var(--ink);text-transform:uppercase}
+.subhead .live{font-family:var(--mono);font-size:11px;color:var(--pink);display:flex;align-items:center;gap:4px}
+.subhead .live .d{width:5px;height:5px;border-radius:50%;background:var(--pink);animation:blink 1.3s infinite}
+.subhead .tools{margin-left:auto;display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.bigcap{flex-shrink:0;margin:0 18px 8px;padding:14px 18px;border-radius:16px;
+  background:linear-gradient(150deg,var(--paper),var(--paper-2));
+  border:1.5px solid var(--line);box-shadow:var(--shadow-card);
+  position:relative;overflow:hidden;min-height:96px;display:flex;flex-direction:column;justify-content:center}
+.bigcap:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--grad-main)}
+.bigcap .who{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.bigcap .who .av{width:18px;height:18px;border-radius:6px;display:grid;place-items:center;
+  font-size:11px;font-weight:800;color:#fff}
+.bigcap .who .nm{font-size:13.5px;font-weight:800;color:var(--ink)}
+.bigcap .who .rl{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-4)}
+.bigcap .who .ts{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--ink-4)}
+.bigcap .tx{font-size:var(--fs-big);line-height:1.6;color:var(--ink);font-weight:600;letter-spacing:.01em}
+.bigcap .tx .kw{color:var(--purple);border-bottom:2px solid var(--lilac);font-weight:800}
+.bigcap .tx .term{color:var(--pink);font-weight:800;border-bottom:1.5px dashed var(--pink-l);cursor:help}
+.termtip{position:fixed;z-index:80;background:var(--ink);color:var(--paper);font-size:13.5px;
+  line-height:1.5;padding:6px 11px;border-radius:9px;max-width:240px;
+  box-shadow:0 8px 22px -8px rgba(0,0,0,.5);opacity:0;transform:translateY(4px);
+  transition:.22s;pointer-events:none}
+.termtip.on{opacity:1;transform:none}
+
+.turncue{flex-shrink:0;margin:0 18px 9px;border-radius:16px;border:1.5px solid var(--line);
+  background:var(--paper);box-shadow:var(--shadow-card);padding:11px 14px;
+  display:flex;align-items:center;gap:12px;transition:.35s;position:relative;overflow:hidden}
+.turncue.urgent{border-color:var(--pink-l);background:linear-gradient(120deg,#FFF5FA,var(--paper))}
+.turncue.now{border-color:transparent;background:var(--grad-main);
+  box-shadow:0 8px 24px -10px rgba(236,72,153,.6)}
+.turncue.now .cue-t,.turncue.now .cue-s{color:#fff}
+.cue-ring{width:38px;height:38px;flex-shrink:0;position:relative}
+.cue-ring svg{transform:rotate(-90deg)}
+.cue-ring .cnt{position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--mono);font-size:14px;font-weight:800;color:var(--pink);transition:.3s}
+.turncue.now .cue-ring .cnt{color:#fff}
+.cue-body{flex:1;min-width:0}
+.cue-t{font-size:15.5px;font-weight:800;color:var(--ink);line-height:1.4;transition:.3s}
+.cue-s{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--ink-4);margin-top:2px;transition:.3s}
+.turncue.now .tinybtn{color:#fff;border-color:rgba(255,255,255,.6)}
+
+/* 预警（全房间通用） */
+.alerts{margin:0 18px 8px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.ovbox{margin:0 18px 8px;display:flex;flex-direction:column;gap:6px;flex-shrink:0}
+.alert{
+  padding:9px 13px;border-radius:12px;border:1.5px dashed #F7A8B8;background:#FFF7F9;
+  display:flex;align-items:center;gap:9px;animation:fadeup .4s ease both;
+}
+.alert.lv2{border-color:#F3C4A8;background:#FFF9F4}
+.alert.lv3{border-color:#F7A8B8;background:#FFF7F9}
+.alert.lv0{border-color:#D8C8EE;background:#FBF7FE}
+@keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.alert .t{font-family:var(--mono);font-size:11px;letter-spacing:.1em;flex-shrink:0;color:var(--pink)}
+.alert.lv2 .t{color:#EA7A3C}
+.alert.lv3 .t{color:#E11D48}
+.alert.lv0 .t{color:var(--purple)}
+.alert .d{font-size:14px;color:var(--ink-2);line-height:1.5;flex:1}
+.alert .d b{color:var(--ink)}
+
+.subflow{flex:1;overflow-y:auto;padding:2px 18px 14px;display:flex;flex-direction:column;
+  gap:7px;min-height:0;scroll-behavior:smooth}
+.sfl{display:flex;gap:10px;padding:9px 11px;border-radius:11px;transition:.3s;border:1.5px solid transparent}
+.sfl:hover{background:var(--paper-2)}
+.sfl.cur{background:var(--paper-2);border-color:var(--line)}
+.sfl .t{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-4);
+  flex-shrink:0;width:34px;padding-top:3px}
+.sfl .av{width:15px;height:15px;border-radius:5px;flex-shrink:0;display:grid;place-items:center;
+  font-size:12px;font-weight:800;color:#fff;margin-top:1px}
+.sfl .b{flex:1;min-width:0}
+.sfl .n{font-size:13.5px;font-weight:800;color:var(--ink);margin-right:6px}
+.sfl .x{font-size:var(--fs-sub);line-height:1.68;color:var(--ink-2)}
+.sfl .x .kw{color:var(--purple);font-weight:700}
+.sfl .x .term{color:var(--pink);font-weight:700;border-bottom:1px dashed var(--pink-l);cursor:help}
+.sfl .badge{font-family:var(--mono);font-size:12px;border-radius:4px;padding:1px 5px;line-height:1.5;
+  margin-left:6px;vertical-align:middle;border:1px solid}
+.sfl .badge.mk{color:var(--pink);border-color:var(--pink-l)}
+.sfl .badge.ov{color:#E11D48;border-color:#FBC7D1;background:#FFF1F4}
+.sfl .badge.wn{color:#C2410C;border-color:#FBD5B5;background:#FFF7ED}
+
+/* 右栏 */
+.anal{flex:1;overflow-y:auto;padding:0 14px 16px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.acard{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;
+  box-shadow:var(--shadow-card);overflow:hidden;flex-shrink:0}
+.acard .ah{display:flex;align-items:center;gap:7px;padding:9px 12px 7px;border-bottom:1px dashed var(--line)}
+.acard .ah .ill2{flex-shrink:0;display:grid;place-items:center}
+.acard .ah h4{font-size:12.5px;font-weight:800;letter-spacing:.13em;color:var(--ink);text-transform:uppercase}
+.acard .ah .ct{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--ink-4)}
+.acard .ab{padding:9px 12px 11px;display:flex;flex-direction:column;gap:7px}
+.pt{display:flex;gap:7px;font-size:14px;line-height:1.6;color:var(--ink-2);
+  opacity:0;transform:translateX(5px);transition:.45s}
+.pt.on{opacity:1;transform:none}
+.pt .b{width:5px;height:5px;border-radius:50%;background:var(--grad-main);margin-top:5px;flex-shrink:0}
+.todo{display:flex;gap:7px;font-size:14px;line-height:1.5;color:var(--ink-2);opacity:0;transition:.45s}
+.todo.on{opacity:1}
+.todo .ck{width:13px;height:13px;border-radius:4px;border:1.5px solid var(--line);flex-shrink:0;
+  margin-top:1px;display:grid;place-items:center;font-size:11px;color:#fff}
+.todo.done .ck{background:var(--grad-mint);border-color:transparent}
+.todo.warn .ck{border-color:#F0C4E4;background:#FEF3FA;color:var(--pink)}
+.todo .body{flex:1;min-width:0}
+.todo .body .t{font-weight:700;color:var(--ink);display:block}
+.todo .body .m{font-family:var(--mono);font-size:12px;letter-spacing:.05em;color:var(--ink-4);
+  display:block;margin-top:1px}
+.people{display:flex;flex-direction:column;gap:5px}
+.person{display:flex;align-items:center;gap:9px;padding:7px 8px;border-radius:10px;transition:.25s}
+.person:hover{background:var(--paper-2)}
+.person.on{background:var(--paper-3)}
+.person .av{width:22px;height:22px;border-radius:8px;display:grid;place-items:center;
+  font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.person .info{flex:1;min-width:0}
+.person .nm{font-size:13.5px;font-weight:800;color:var(--ink);display:flex;align-items:center;
+  gap:4px;flex-wrap:wrap}
+.person .rl{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--ink-4);margin-top:1px}
+.person .tag{font-size:12px;color:var(--ink-4);border:1px solid var(--line);border-radius:10px;
+  padding:1px 6px;font-weight:500;line-height:1.5}
+.phrases{display:flex;flex-direction:column;gap:6px}
+.phrase{font-size:13.5px;line-height:1.55;color:var(--ink-2);padding:7px 10px;border-radius:10px;
+  border:1.5px solid var(--line);background:var(--paper-2);cursor:pointer;transition:.24s;
+  display:flex;align-items:center;gap:7px;text-align:left;width:100%}
+.phrase:hover{border-color:var(--pink-l);background:#FEF7FC;transform:translateX(2px)}
+
+.dock{flex-shrink:0;height:56px;display:flex;align-items:center;gap:14px;padding:0 22px;
+  border-top:1px solid var(--line);background:var(--paper);z-index:8}
+.modeswitch{display:flex;border:1.5px solid var(--line);border-radius:20px;overflow:hidden;flex-shrink:0}
+.modeswitch button{font-size:13.5px;padding:5px 13px;color:var(--ink-3);transition:.24s;white-space:nowrap}
+.modeswitch button.act{color:#fff;background:var(--ink)}
+.scrub{flex:1;display:flex;align-items:center;gap:10px;min-width:0}
+.scrub .tm{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--ink-4);flex-shrink:0}
+.track{flex:1;height:20px;position:relative;cursor:pointer;display:flex;align-items:center}
+.track .rail{position:absolute;left:0;right:0;height:3px;background:var(--line);border-radius:3px}
+.track .fill{position:absolute;left:0;height:3px;background:var(--grad-main);border-radius:3px;transition:width .3s}
+.track .head{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--grad-main);
+  transform:translateX(-50%);box-shadow:0 0 0 3px var(--paper),0 1px 5px rgba(139,92,246,.45);transition:left .3s}
+.track .pt2{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--line);
+  transform:translateX(-50%);top:50%;margin-top:-2.5px}
+.track .pt2.hit{background:var(--grad-main)}
+.track .pt2.mk{width:8px;height:8px;margin-top:-4px;background:var(--pink);box-shadow:0 0 0 2px var(--paper)}
+.dockright{display:flex;gap:6px;flex-shrink:0}
+.dbtn{font-size:13px;padding:5px 11px;border:1.5px solid var(--line);border-radius:20px;
+  color:var(--ink-2);transition:.24s;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.dbtn:hover{border-color:var(--ink-4);color:var(--ink)}
+.dbtn.act{color:#fff;background:var(--grad-main);border-color:transparent}
+
+body.focusmode .col:first-child,body.focusmode .col:nth-child(3){display:none}
+body.focusmode .stage{grid-template-columns:1fr}
+body.focusmode .col:nth-child(2){border-left:none}
+body.focusmode .bigcap{min-height:180px}
+body.focusmode .bigcap .tx{font-size:calc(var(--fs-big) * 1.35);line-height:1.55}
+body.focusmode .sfl .x{font-size:calc(var(--fs-sub) * 1.15)}
+body.focusmode .subflow{padding:6px 40px 20px}
+body.focusmode .bigcap,body.focusmode .turncue,body.focusmode .alerts,
+body.focusmode .ovbox{margin-left:40px;margin-right:40px}
+
+.viewnav{position:absolute;left:50%;transform:translateX(-50%);bottom:64px;display:flex;gap:3px;
+  background:var(--paper);border:1.5px solid var(--line);border-radius:24px;padding:4px;z-index:9;
+  box-shadow:var(--shadow-card)}
+.viewnav button{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-4);
+  padding:5px 11px;border-radius:20px;transition:.22s;white-space:nowrap}
+.viewnav button:hover{color:var(--ink-2)}
+.viewnav button.act{color:#fff;background:var(--grad-main)}
+body.focusmode .viewnav{display:none}
+
+.mviews{position:absolute;inset:0;top:56px;bottom:56px;display:none;flex-direction:column;
+  padding:12px 18px 14px;overflow-y:auto;background:var(--paper);z-index:5}
+.mviews.on{display:flex}
+.mv-head{flex-shrink:0;display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:11px}
+.mv-head h2{font-size:17px;font-weight:800;color:var(--ink);letter-spacing:.03em}
+.mv-head .note{font-family:var(--mono);font-size:11px;letter-spacing:.11em;color:var(--ink-4)}
+.mvgrid{display:grid;gap:11px;flex:1;min-height:0}
+.mvgrid.c2{grid-template-columns:1fr 1fr}
+.mvgrid.c3{grid-template-columns:repeat(3,1fr)}
+.panel{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;
+  box-shadow:var(--shadow-card);padding:11px 13px;display:flex;flex-direction:column;
+  min-height:0;overflow:hidden}
+.panel h5{font-family:var(--mono);font-size:11px;letter-spacing:.13em;color:var(--ink-4);
+  text-transform:uppercase;margin-bottom:8px;flex-shrink:0}
+.bigstat{font-size:clamp(22px,2.9vw,34px);font-weight:800;letter-spacing:-.02em;line-height:1.1;
+  background:var(--grad-main);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.bigstat .u{font-size:14px;font-weight:700;letter-spacing:0;margin-left:2px}
+.strow{display:flex;gap:8px}
+.stbox{flex:1;border:1.5px solid var(--line-soft);border-radius:10px;padding:7px 9px;background:var(--paper-2)}
+.barlist{display:flex;flex-direction:column;gap:8px;overflow-y:auto}
+.barrow{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.barrow .nm{width:50px;flex-shrink:0;color:var(--ink);font-weight:700}
+.barrow .rail{flex:1;height:8px;background:var(--paper-3);border-radius:5px;overflow:hidden}
+.barrow .rail i{display:block;height:100%;background:var(--grad-main);border-radius:5px;
+  width:0;transition:width .7s cubic-bezier(.2,.9,.3,1)}
+.barrow .vv{font-family:var(--mono);font-size:11.5px;color:var(--ink-4);width:40px;text-align:right;flex-shrink:0}
+.moodwrap{flex:1;position:relative;min-height:66px}
+.moodwrap svg{width:100%;height:100%;overflow:visible}
+.cloud{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;overflow-y:auto}
+.cloud span{border:1.5px solid var(--line);border-radius:20px;padding:3px 10px;color:var(--ink-2);
+  background:var(--paper-2);transition:.24s}
+.cloud span:hover{border-color:var(--pink-l);color:var(--pink)}
+.evtlist{display:flex;flex-direction:column;gap:6px;overflow-y:auto}
+.evt{display:flex;gap:8px;font-size:13.5px;line-height:1.5;padding-left:8px;border-left:2.5px solid var(--line)}
+.evt.lv3{border-left-color:#E11D48}
+.evt.lv2{border-left-color:#FB923C}
+.evt.lv1{border-left-color:var(--pink)}
+.evt.lv0{border-left-color:var(--lilac)}
+.evt .t{font-family:var(--mono);font-size:11px;color:var(--ink-4);flex-shrink:0;padding-top:2px}
+.evt .d{color:var(--ink-2)}
+.sugglist{display:flex;flex-direction:column;gap:6px;overflow-y:auto}
+.scard{border:1.5px solid var(--line-soft);border-left:2.5px solid var(--violet);border-radius:9px;
+  padding:7px 10px;background:var(--paper-2);font-size:13.5px;line-height:1.55;color:var(--ink-2)}
+.scard b{color:var(--ink)}
+.handgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;overflow-y:auto}
+.hcell{border:1.5px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center;background:var(--paper-2)}
+.hcell .w{font-size:14px;font-weight:800;color:var(--ink)}
+.hcell .s{font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink-4);margin-top:3px}
+.disclaimbar{margin-top:9px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--pink);
+  border:1.5px solid var(--pink-l);border-radius:8px;padding:6px 10px;flex-shrink:0;background:#FEF7FC}
+
+#archive{background:var(--paper-3);align-items:center;overflow-y:auto}
+.paper{width:min(790px,92vw);background:var(--paper);margin:28px auto 46px;
+  box-shadow:0 2px 0 -1px var(--line),0 20px 48px -24px rgba(139,92,246,.44);
+  border:1.5px solid var(--line);padding:48px 52px 44px;position:relative;border-radius:6px}
+.paper:before{content:"";position:absolute;left:0;top:0;right:0;height:4px;
+  background:var(--grad-main);border-radius:6px 6px 0 0}
+.ar-head{display:flex;justify-content:space-between;align-items:baseline;
+  padding-bottom:11px;border-bottom:1.5px solid var(--ink)}
+.ar-head .l{font-family:var(--mono);font-size:12px;letter-spacing:.19em;color:var(--ink)}
+.ar-head .r{font-family:var(--mono);font-size:11.5px;letter-spacing:.13em;color:var(--ink-3)}
+.ar-title{text-align:center;margin:28px 0 6px}
+.ar-title .no{font-family:var(--mono);font-size:12px;letter-spacing:.28em;color:var(--ink-3);margin-bottom:8px}
+.ar-title h2{font-family:var(--serif);font-size:33px;font-weight:700;color:var(--ink);line-height:1.3}
+.ar-title .en{font-family:var(--mono);font-size:11.5px;letter-spacing:.23em;color:var(--ink-3);margin-top:8px}
+.ar-meta{display:flex;justify-content:center;gap:22px;margin:15px 0 28px;
+  padding-bottom:18px;border-bottom:1px solid var(--line)}
+.ar-meta div{text-align:center}
+.ar-meta .k{font-family:var(--mono);font-size:12px;letter-spacing:.13em;color:var(--ink-4);display:block}
+.ar-meta .v{font-family:var(--serif);font-size:16px;color:var(--ink);display:block;margin-top:3px}
+.sec{margin-bottom:24px}
+.sec h3{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink);
+  display:flex;align-items:baseline;gap:8px;margin-bottom:11px;padding-bottom:6px;
+  border-bottom:1px solid var(--line)}
+.sec h3 .n{font-family:var(--mono);font-size:12px;letter-spacing:.13em;color:var(--purple);font-weight:400}
+.rec{display:flex;gap:11px;padding:5px 0;border-bottom:1px dotted var(--line-soft);font-size:15px;line-height:1.7}
+.rec .tt{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-4);
+  flex-shrink:0;width:38px;padding-top:3px}
+.rec .nm{font-family:var(--serif);font-weight:700;color:var(--ink);flex-shrink:0;width:52px}
+.rec .tx{color:var(--ink-2);font-family:var(--serif)}
+.rec .tx mark{background:none;color:var(--ink);font-weight:700;border-bottom:1.5px solid var(--lilac)}
+.concl{display:flex;gap:8px;font-family:var(--serif);font-size:15.5px;line-height:1.75;
+  color:var(--ink-2);padding:4px 0}
+.concl .b{width:5px;height:5px;border-radius:50%;background:var(--grad-main);margin-top:7px;flex-shrink:0}
+.task{display:flex;gap:8px;font-family:var(--serif);font-size:15.5px;line-height:1.7;padding:5px 0;color:var(--ink-2)}
+.task .c{width:12px;height:12px;border:1.5px solid var(--ink-3);border-radius:3px;flex-shrink:0;
+  margin-top:3px;display:grid;place-items:center;font-size:11px;color:var(--ink)}
+.task .c.done{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.task .m{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-4);display:block}
+.marks{display:flex;flex-direction:column;gap:5px}
+.mkrow{display:flex;gap:8px;font-family:var(--serif);font-size:15px;color:var(--ink-2);align-items:baseline}
+.mkrow .d{width:6px;height:6px;border-radius:50%;background:var(--grad-main);flex-shrink:0}
+.mkrow .t{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-4);flex-shrink:0}
+.ar-foot{display:flex;justify-content:space-between;align-items:center;margin-top:28px;
+  padding-top:11px;border-top:1.5px solid var(--ink)}
+.ar-foot .p{font-family:var(--mono);font-size:11px;letter-spacing:.15em;color:var(--ink-3)}
+.printbtn{position:fixed;right:26px;bottom:26px;background:var(--grad-main);color:#fff;font-size:14px;
+  padding:9px 17px;border-radius:22px;box-shadow:0 10px 26px -10px rgba(236,72,153,.6);
+  display:flex;align-items:center;gap:7px;z-index:30;transition:.24s}
+.printbtn:hover{transform:translateY(-2px)}
+.toast{position:fixed;left:50%;bottom:76px;transform:translate(-50%,16px);opacity:0;
+  background:var(--ink);color:var(--paper);font-size:14px;padding:9px 16px;border-radius:12px;z-index:70;
+  transition:.32s cubic-bezier(.2,.9,.3,1);pointer-events:none;box-shadow:0 12px 30px -10px rgba(0,0,0,.5)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.kbd{position:absolute;right:18px;bottom:66px;font-family:var(--mono);font-size:12px;
+  letter-spacing:.04em;color:var(--ink-4);z-index:6;text-align:right;line-height:1.7;
+  opacity:.72;pointer-events:none}
+.kbd b{color:var(--ink-3);font-weight:700}
+body.focusmode .kbd{display:none}
+@media(max-width:1240px){
+  .stage{grid-template-columns:1fr}
+  .col:first-child{display:none}
+  #lobby{padding:0 24px}
+  .viewnav{display:none}
+  .mvgrid.c3{grid-template-columns:1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.06s !important}
+  .blob{display:none}
+}
+</style>
+</head>
+<body>
+<section class="screen on" id="lobby">
+  <div class="blob" style="width:220px;height:220px;left:-60px;top:120px"></div>
+  <div class="blob" style="width:160px;height:160px;right:80px;top:60px;animation-delay:-3s"></div>
+  <div class="lob-top">
+    <div class="brand-wrap">
+      <svg width="42" height="42" viewBox="0 0 40 40">
+        <defs><linearGradient id="lg1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#F472B6"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient></defs>
+        <circle cx="20" cy="20" r="18" fill="url(#lg1)" opacity=".14"/>
+        <path d="M20 9a6 6 0 00-6 6v6a6 6 0 0012 0v-6a6 6 0 00-6-6z" fill="url(#lg1)"/>
+        <path d="M11 20v1a9 9 0 0018 0v-1" fill="none" stroke="url(#lg1)" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M20 30v3" stroke="url(#lg1)" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="29" cy="12" r="2.2" fill="#F9A8D4"/><circle cx="11.5" cy="13" r="1.6" fill="#DDD6FE"/>
+      </svg>
+      <div>
+        <div class="brand">SOUNDTRACE<span class="grad-text">.</span></div>
+        <div class="lob-sub">声场档案 · 对话分析室</div>
+      </div>
+    </div>
+    <div class="lob-right">
+      <div class="t1">展卷对话，看见声音的形状</div>
+      <div class="t2">抬头看声场 · 侧望读对话</div>
+    </div>
+  </div>
+  <div class="slogan">把听见的<em>声音</em>，<br>变成看得见的<em>档案</em>。</div>
+  <div class="rooms" id="rooms"></div>
+  <div class="lob-foot">
+    <div class="c">2026 无障碍对话参考 · 声迹 SOUNDTRACE</div>
+    <div class="footbtns">
+      <button class="pill" id="themeBtn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>
+        深色
+      </button>
+      <button class="pill" id="contrastBtn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 3v18"/></svg>
+        高对比
+      </button>
+    </div>
+  </div>
+</section>
+
+<section class="screen" id="room">
+  <div class="topbar">
+    <button class="tb-back" id="backBtn">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg>
+      大厅
+    </button>
+    <div class="tb-id">ROOM — <b id="roomNo">01</b> <span id="roomName">会议场</span></div>
+    <div class="tb-mid">
+      <span><span class="v" id="spkCount">4</span> 人 · <span class="v" id="elapsed">00:00</span></span>
+      <span class="sep"></span>
+      <span class="tb-live"><i class="d"></i><span id="recState">录制中</span></span>
+    </div>
+    <div class="tb-acts">
+      <button class="linebtn ghost" id="playBtn">▶ 开始</button>
+      <button class="linebtn" id="exportBtn">导出档案</button>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="col">
+      <div class="colhead">
+        <h3 id="fieldTitle">声场</h3><span class="sub" id="fieldSub">01</span>
+        <div class="switchbar">
+          <button data-view="3d" class="act">3D</button>
+          <button data-view="2d">俯视</button>
+        </div>
+      </div>
+      <div class="fieldwrap">
+        <div class="fieldbox" id="field">
+          <div class="axis-note" id="axisNote">3D · 透视房间</div>
+          <div class="scene2d hide" id="scene2d"><div class="grid"></div></div>
+          <div class="scene3d show" id="scene3d">
+            <div class="room3d" id="room3d"><div class="face floor"></div><div class="desk3d"></div></div>
+          </div>
+        </div>
+        <div class="fieldctl">
+          <button class="tinybtn act" id="envBtn">环境音</button>
+          <button class="tinybtn" id="heatBtn">热力</button>
+          <button class="tinybtn" id="rotBtn">旋转</button>
+        </div>
+      </div>
+      <div class="legendrow">
+        <div><i style="background:var(--grad-main)"></i><span id="legend1">声柱高度 = 音量</span></div>
+        <div><i style="background:var(--grad-soft)"></i><span id="legend2">环境音</span></div>
+      </div>
+    </div>
+
+    <div class="col subcol">
+      <div class="subarea">
+        <div class="subhead">
+          <h3 id="subTitle">字幕</h3>
+          <span class="live"><i class="d"></i>实时</span>
+          <div class="tools">
+            <button class="tinybtn" id="markBtn">标记</button>
+            <button class="tinybtn" id="recentBtn">刚才 30 秒</button>
+            <button class="tinybtn" id="focusBtn">专注</button>
+          </div>
+        </div>
+        <div class="bigcap" id="bigcap">
+          <div class="who" id="capWho"></div>
+          <div class="tx" id="capTx">等待声音输入…</div>
+        </div>
+        <div class="turncue" id="turncue">
+          <div class="cue-ring">
+            <svg width="38" height="38"><circle cx="19" cy="19" r="16" fill="none" stroke="var(--line)" stroke-width="3"/>
+              <circle id="cueRing" cx="19" cy="19" r="16" fill="none" stroke="var(--pink)" stroke-width="3"
+                stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="100.5"/></svg>
+            <div class="cnt" id="cueCnt">—</div>
+          </div>
+          <div class="cue-body">
+            <div class="cue-t" id="cueT">等待开始</div>
+            <div class="cue-s" id="cueS">提前 2 秒提示</div>
+          </div>
+          <div><button class="tinybtn" id="cueBtn" style="display:none">说</button></div>
+        </div>
+        <div class="alerts" id="alerts"></div>
+        <div class="ovbox" id="overlapBox"></div>
+        <div class="subflow" id="subflow"></div>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="colhead"><h3>分析</h3><span class="sub">DERIVED</span></div>
+      <div class="anal" id="anal"></div>
+    </div>
+  </div>
+
+  <div class="mviews" id="mviews">
+    <div id="mvOverview" style="display:none;flex-direction:column;flex:1;min-height:0">
+      <div class="mv-head"><h2>全场总览</h2><span class="note">OVERVIEW · 实时</span></div>
+      <div class="mvgrid c3" style="grid-template-rows:auto 1fr">
+        <div class="panel"><h5>进行时长</h5><div class="bigstat" id="ovDur">0<span class="u">s</span></div>
+          <div style="margin-top:7px;font-size:13px;color:var(--ink-4);line-height:1.5" id="ovDurSub">—</div></div>
+        <div class="panel"><h5>语句 / 条目</h5><div class="strow">
+          <div class="stbox"><div class="bigstat" style="font-size:25px" id="ovSeg">0</div>
+            <div style="font-size:12px;color:var(--ink-4);margin-top:2px">语句</div></div>
+          <div class="stbox"><div class="bigstat" style="font-size:25px" id="ovTodo">0</div>
+            <div style="font-size:12px;color:var(--ink-4);margin-top:2px" id="ovTodoLabel">待办</div></div>
+        </div></div>
+        <div class="panel"><h5>发言均衡度</h5><div class="bigstat" id="ovBal">—</div>
+          <div style="margin-top:7px;font-size:13px;color:var(--ink-4);line-height:1.5" id="ovBalSub">—</div></div>
+        <div class="panel" style="grid-column:span 2"><h5>各人发言占比</h5><div class="barlist" id="ovBars"></div></div>
+        <div class="panel"><h5 id="ovListTitle">条目闭环</h5><div class="barlist" id="ovTodoList"></div></div>
+      </div>
+    </div>
+    <div id="mvTimeline" style="display:none;flex-direction:column;flex:1;min-height:0">
+      <div class="mv-head"><h2>完整时间线</h2><span class="note">TIMELINE · 预警与标记</span></div>
+      <div class="mvgrid c2" style="grid-template-columns:1fr 290px">
+        <div class="panel" style="overflow:hidden"><h5>事件轴</h5><div class="evtlist" id="mvEvts"></div></div>
+        <div class="panel"><h5>情绪走势</h5>
+          <div class="moodwrap"><svg id="moodSvg" viewBox="0 0 240 90" preserveAspectRatio="none"></svg></div>
+          <div style="margin-top:7px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--ink-4)">
+            肯定 · 中性 · 犹豫 · 紧张</div>
+        </div>
+      </div>
+    </div>
+    <div id="mvInsight" style="display:none;flex-direction:column;flex:1;min-height:0">
+      <div class="mv-head"><h2>关键词与洞察</h2><span class="note">INSIGHT</span></div>
+      <div class="mvgrid c2" style="grid-template-columns:1.15fr 1fr">
+        <div class="panel"><h5>关键词（按时序）</h5><div class="cloud" id="mvCloud"></div></div>
+        <div class="panel"><h5>发言建议</h5><div class="sugglist" id="mvSugg"></div></div>
+      </div>
+    </div>
+    <div id="mvAccess" style="display:none;flex-direction:column;flex:1;min-height:0">
+      <div class="mv-head"><h2>无障碍设置</h2><span class="note">ACCESSIBILITY</span></div>
+      <div class="mvgrid c2">
+        <div class="panel">
+          <h5>字号档位</h5>
+          <div style="display:flex;gap:6px;margin-bottom:12px" id="sizeBtns">
+            <button class="tinybtn" data-size="s">小</button>
+            <button class="tinybtn act" data-size="m">中</button>
+            <button class="tinybtn" data-size="l">大</button>
+            <button class="tinybtn" data-size="xl">超大</button>
+          </div>
+          <h5>显示选项</h5>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px" id="toggleList"></div>
+        </div>
+        <div class="panel"><h5>手语示意</h5><div class="handgrid" id="mvHand"></div>
+          <div class="disclaimbar">占位示意 · 非真实手语生成（需接入第三方手语引擎）</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="viewnav" id="viewnav">
+    <button data-mv="live" class="act">对话</button>
+    <button data-mv="overview">总览</button>
+    <button data-mv="timeline">时间线</button>
+    <button data-mv="insight">洞察</button>
+    <button data-mv="access">无障碍</button>
+  </div>
+
+  <div class="dock">
+    <div class="modeswitch">
+      <button class="act" data-mode="live">展卷</button>
+      <button data-mode="archive">档案</button>
+    </div>
+    <div class="scrub">
+      <span class="tm" id="tmCur">00:00</span>
+      <div class="track" id="track"><div class="rail"></div><div class="fill" id="fill"></div><div class="head" id="head"></div></div>
+      <span class="tm" id="tmTot">04:00</span>
+    </div>
+    <div class="dockright">
+      <button class="dbtn" id="sizeBtn">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 18V8h4M9 18V6h5M15 18v-7h5"/></svg>
+        <span id="sizeLabel">中</span>
+      </button>
+      <button class="dbtn" id="themeBtn2">深色</button>
+    </div>
+  </div>
+  <div class="kbd" id="kbdHint"><b>1-5</b> 视图　<b>空格</b> 播放　<b>←→</b> 逐句<br><b>F</b> 专注　<b>A</b> 档案　<b>D</b> 深色　<b>+ -</b> 字号</div>
+</section>
+
+<section class="screen" id="archive">
+  <div class="paper" id="paper"></div>
+  <button class="printbtn" id="printBtn">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3v11M8 10l4 4 4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>
+    打印 / PDF
+  </button>
+</section>
+
+<div class="termtip" id="termtip"></div>
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+/* ============================================================
+   声迹 SOUNDTRACE v4 · 四房间引擎
+   ============================================================ */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const el = (t,c) => { const e=document.createElement(t); if(c) e.className=c; return e; };
+
+/* ---------------- 房间插画 ---------------- */
+const ILL={
+  meet:`<svg width="58" height="58" viewBox="0 0 64 64"><defs><linearGradient id="im1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBCFE8"/><stop offset="1" stop-color="#DDD6FE"/></linearGradient></defs>
+    <ellipse cx="32" cy="40" rx="21" ry="8" fill="url(#im1)" opacity=".55"/>
+    <rect x="13" y="24" width="38" height="15" rx="7.5" fill="#fff" stroke="#E9D5F5" stroke-width="1.6"/>
+    <circle cx="22" cy="16" r="5.2" fill="#F9A8D4"/><circle cx="32" cy="13" r="5.8" fill="#C4B5FD"/><circle cx="42" cy="16" r="5.2" fill="#A7F3D0"/>
+    <path d="M20 15.4h2M22 15.4v0M30.4 12.4h2M40 15.4h2" stroke="#7C3AED" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+  dine:`<svg width="58" height="58" viewBox="0 0 64 64"><defs><linearGradient id="im2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBCFE8"/><stop offset="1" stop-color="#FDE68A"/></linearGradient></defs>
+    <ellipse cx="32" cy="38" rx="22" ry="9" fill="url(#im2)" opacity=".6"/>
+    <ellipse cx="32" cy="34" rx="17" ry="7" fill="#fff" stroke="#EFD9F0" stroke-width="1.6"/>
+    <circle cx="32" cy="18" r="7" fill="#F9A8D4" opacity=".9"/><circle cx="32" cy="18" r="3.2" fill="#fff"/>
+    <circle cx="16" cy="26" r="4.4" fill="#C4B5FD"/><circle cx="48" cy="26" r="4.4" fill="#FCD34D"/></svg>`,
+  trip:`<svg width="58" height="58" viewBox="0 0 64 64"><defs><linearGradient id="im3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DDD6FE"/><stop offset="1" stop-color="#A7F3D0"/></linearGradient></defs>
+    <circle cx="32" cy="30" r="19" fill="url(#im3)" opacity=".45"/>
+    <path d="M22 38h20l-2-11H24z" fill="#fff" stroke="#E2D0EE" stroke-width="1.6"/>
+    <circle cx="26" cy="41" r="3.2" fill="#C4B5FD" stroke="#fff" stroke-width="1.2"/>
+    <circle cx="38" cy="41" r="3.2" fill="#C4B5FD" stroke="#fff" stroke-width="1.2"/>
+    <path d="M32 22v-5" stroke="#F472B6" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="32" cy="16" r="2" fill="#F472B6"/></svg>`,
+  home:`<svg width="58" height="58" viewBox="0 0 64 64"><defs><linearGradient id="im4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBCFE8"/><stop offset="1" stop-color="#DDD6FE"/></linearGradient></defs>
+    <path d="M32 16l18 15v18a3 3 0 01-3 3H17a3 3 0 01-3-3V31z" fill="#fff" stroke="#E9D5F5" stroke-width="1.6"/>
+    <path d="M32 16l18 15H14z" fill="url(#im4)" opacity=".7"/>
+    <rect x="27" y="36" width="10" height="12" rx="2" fill="#F9A8D4" opacity=".8"/>
+    <circle cx="22" cy="34" r="2" fill="#C4B5FD"/><circle cx="42" cy="34" r="2" fill="#C4B5FD"/></svg>`,
+};
+
+/* ============================================================
+   房间数据 —— 四个房间，同一套引擎
+   ============================================================ */
+const DATA = {
+
+/* ================= ROOM 01 会议场 ================= */
+meet:{
+  no:'01', name:'会议场', tag:'办公场景', ill:'meet',
+  desc:'多人会议 · 发言追踪 · 纪要生成',
+  fieldTitle:'声场', fieldSub:'01', subTitle:'字幕',
+  legend1:'声柱高度 = 音量', legend2:'环境音',
+  people:{
+    zhang:{name:'张总', role:'CEO',    short:'张', x:26, y:22, color:'#A78BFA', tags:['语速慢','爱拍板']},
+    li:   {name:'李总', role:'产品VP', short:'李', x:74, y:20, color:'#F472B6', tags:['语速快','常打断']},
+    wang: {name:'王工', role:'后端',   short:'王', x:25, y:76, color:'#7DD3FC', tags:['爱说缩写','语速中']},
+    chen: {name:'陈老师',role:'设计',  short:'陈', x:75, y:78, color:'#FBBF24', tags:['声音轻','用专业词']},
+  },
+  terms:{
+    'SDK':'软件开发工具包，别人做好的代码包',
+    '灰度':'先让小部分用户用，没问题再放开',
+    '兜底':'出问题时保底的方案',
+    '联调':'两个系统对接起来一起测',
+    '对齐':'大家把理解统一到一个口径',
+    '竞品':'同类的对手产品',
+  },
+  script:[
+    {s:'zhang', ts:'00:03', tx:'好，人都到齐了，开始吧。今天主要过一下支付模块的进度。', vol:.55, mood:'肯定'},
+    {s:'wang',  ts:'00:18', tx:'后端这边，联调现在卡在供应商的 SDK 上，他们上周五才给到测试包。',
+     kw:['供应商 SDK'], term:['SDK','联调'], vol:.78, mood:'犹豫'},
+    {s:'zhang', ts:'00:35', tx:'那这个不能再拖了。王工，你这边最快什么时候能把联调跑通？', term:['联调'], vol:.68, mood:'中性'},
+    {s:'wang',  ts:'00:52', tx:'给我三天，周四晚上之前能把主流程跑通。', kw:['周四晚上'], mark:true, vol:.72, mood:'肯定',
+     cue:true, cueTxt:'王工说完这句会有一个空隙'},
+    {s:'li',    ts:'01:10', tx:'我提醒一下，周四晚上发版窗口已经关了，实际上你得周三就交付。', kw:['周三'],
+     overlap:true, vol:.96, mood:'紧张', cue:true, cueTxt:'李总在打断，别急着说话'},
+    {s:'wang',  ts:'01:26', tx:'……行，那我改成周三下午六点之前。', kw:['周三下午六点'], mark:true, vol:.58, mood:'犹豫',
+     cue:true, cueTxt:'机会来了 · 王工已让步'},
+    {s:'chen',  ts:'01:44', tx:'设计稿这边我周三上午能出终稿，支付失败的兜底页我一起给了。', kw:['周三上午'], term:['兜底'], vol:.66, mood:'肯定'},
+    {s:'zhang', ts:'02:02', tx:'好。那灰度策略呢？这次是全量还是分批？', term:['灰度'], vol:.62, mood:'中性'},
+    {s:'li',    ts:'02:18', tx:'我建议先放 10%，观察两天没有异常再放开。', kw:['10%'], mark:true, vol:.74, mood:'肯定',
+     cue:true, cueTxt:'这是你插话的最好时机'},
+    {s:'zhang', ts:'02:34', tx:'同意，就按 10% 来。这个决策记一下。', kw:['10%'], vol:.66, mood:'肯定'},
+    {s:'wang',  ts:'02:50', tx:'明白，那我联调完之后周五做灰度。', term:['灰度'], vol:.58, mood:'中性'},
+    {s:'chen',  ts:'03:06', tx:'对了，那个失败页的文案要不要找法务过一下？涉及到赔付说明。', kw:['法务'], vol:.62, mood:'犹豫'},
+    {s:'zhang', ts:'03:20', tx:'这个再议，先把技术侧搞定。法务那边我回头问问。', vol:.58, mood:'犹豫'},
+    {s:'li',    ts:'03:36', tx:'张总，还有个事——上次说的那份竞品分析，一直没人认领。', term:['竞品'], vol:.7, mood:'中性'},
+    {s:'zhang', ts:'03:52', tx:'哦对。那……先放着吧，等这版发完再说。', vol:.52, mood:'犹豫'},
+  ],
+  summary:[
+    {at:1, tx:'支付联调卡在供应商 SDK 交付上'},
+    {at:5, tx:'联调截止提前：周三 18:00（原周四）'},
+    {at:6, tx:'设计终稿：周三上午'},
+    {at:8, tx:'灰度策略：先 10%，观察 2 天'},
+    {at:13,tx:'竞品分析仍无人认领'},
+  ],
+  todos:[
+    {at:3,  t:'完成支付模块主流程联调', m:'王工 · 周四', state:'done'},
+    {at:5,  t:'完成支付模块主流程联调', m:'王工 · 周三 18:00（已修订）', state:'done'},
+    {at:6,  t:'交付支付模块设计终稿', m:'陈老师 · 周三上午', state:'done'},
+    {at:11, t:'赔付文案法务确认', m:'未指定负责人 · 无截止日', state:'warn'},
+  ],
+  sugg:[
+    {at:0,  tx:'会议刚开始，先听清楚各方立场。'},
+    {at:2,  tx:'你还没发言。<b>可以问：供应商 SDK 谁在跟进？</b>'},
+    {at:8,  tx:'决策已明确。<b>可以问：10% 的观察指标是哪些？</b>'},
+    {at:11, tx:'出现待定项。<b>可以接过：法务这块我来跟。</b>'},
+  ],
+  phrases:[
+    '刚才那部分能再展开一下吗？我想确认细节。',
+    '这个点很关键，能再说一遍数据吗？',
+    '我理解的是 X，对吗？',
+    '这块我没跟上，能慢一点吗？',
+    '我先记一下，稍后补充。',
+  ],
+  events:[
+    {at:1,  lv:0, tt:'AMBIENT', ms:'空调噪声升高 · 已降噪'},
+    {at:4,  lv:3, tt:'OVERLAP', ms:'李总与王工重叠发言 2.3 秒 · 已标注'},
+    {at:11, lv:0, tt:'AMBIENT', ms:'门口敲门声 · 不影响对话'},
+    {at:13, lv:2, tt:'RISK',    ms:'出现无负责人待办 · 会后需指定'},
+  ],
+  hands:['支付','联调','周三','灰度','设计稿','法务','供应商','竞品'],
+  archive:{
+    title:'会议场 · 完整对话纪要', en:'SOUND FIELD ARCHIVE / MEETING ROOM',
+    meta:[['参会人','4 人'],['时长',null],['语句',null],['待办',null]],
+    sections:['参会人员','对话全程记录','核心结论','待办事项','重点标记','未能分离的片段'],
+  },
+  doneLabel:'待办',
+  hasOverlap:true,
+},
+
+/* ================= ROOM 02 聚餐场 ================= */
+dine:{
+  no:'02', name:'聚餐场', tag:'生活场景', ill:'dine',
+  desc:'圆桌对话 · 人声分离 · 谁在敬酒谁在离席',
+  fieldTitle:'圆桌声场', fieldSub:'02', subTitle:'同桌字幕',
+  legend1:'声柱高度 = 音量', legend2:'餐具 / 环境音',
+  people:{
+    mom:  {name:'妈',   role:'主位',  short:'妈', x:50, y:16, color:'#F472B6', tags:['声音大','爱劝菜']},
+    dad:  {name:'爸',   role:'主位旁',short:'爸', x:82, y:36, color:'#A78BFA', tags:['话少','爱点头']},
+    aunt: {name:'二姨', role:'左边',  short:'姨', x:18, y:38, color:'#FBBF24', tags:['语速极快','爱打听']},
+    me:   {name:'我',   role:'右边',  short:'我', x:80, y:74, color:'#7DD3FC', tags:['听障','需看口型']},
+    kid:  {name:'小满', role:'小孩',  short:'满', x:22, y:76, color:'#34D399', tags:['声音尖','爱插嘴']},
+  },
+  terms:{
+    '转学':'换学校，这里指小满要换小学',
+    '整':'干了（劝酒用语）',
+    '生':'生日',
+    '房':'学区房',
+  },
+  script:[
+    {s:'mom',  ts:'00:04', tx:'来来来，都坐下，今天给小满过生日，别客气。', vol:.7, mood:'肯定'},
+    {s:'aunt', ts:'00:16', tx:'哎呀小满都这么高了！上次见还是这么点。学习怎么样啊？', kw:['学习'], vol:.92, mood:'肯定'},
+    {s:'kid',  ts:'00:28', tx:'我这次考了第九名！', mark:true, vol:.8, mood:'肯定'},
+    {s:'aunt', ts:'00:36', tx:'第九名不错啊，那你们班第一是谁？他家长是做什么的？', overlap:true, vol:.95, mood:'中性',
+     cue:true, cueTxt:'二姨在连问，等下有空隙'},
+    {s:'me',   ts:'00:50', tx:'（我需要看口型才能跟上，二姨语速太快了）', inner:true, vol:.3, mood:'犹豫'},
+    {s:'dad',  ts:'01:02', tx:'先吃饭先吃饭，菜都凉了。', kw:['先吃饭'], vol:.6, mood:'中性',
+     cue:true, cueTxt:'爸在打圆场 · 可以接话'},
+    {s:'mom',  ts:'01:14', tx:'对了，小满转学的事，你二姨夫那边能不能帮忙问问？', kw:['转学'], term:['转学'], mark:true, vol:.66, mood:'犹豫'},
+    {s:'aunt', ts:'01:28', tx:'能问，但是那个学区房现在挺紧的，你们得有心理准备。', term:['房'], vol:.88, mood:'犹豫'},
+    {s:'me',   ts:'01:44', tx:'（我听到了"学区房"三个字，但前面那段没跟上）', inner:true, vol:.3, mood:'犹豫'},
+    {s:'dad',  ts:'01:56', tx:'钱的事再说，先看能不能排上。', vol:.58, mood:'中性'},
+    {s:'kid',  ts:'02:08', tx:'我不想转学！我的朋友都在这儿！', mark:true, vol:.95, mood:'紧张'},
+    {s:'mom',  ts:'02:20', tx:'没人说一定转，就是先问问，你别急。', vol:.66, mood:'犹豫',
+     cue:true, cueTxt:'小孩情绪上来了，这时没人会打断你'},
+    {s:'aunt', ts:'02:34', tx:'哎哟这孩子，转学好学校多重要啊，我跟你讲……', vol:.9, mood:'紧张'},
+    {s:'me',   ts:'02:50', tx:'（我想说：先听小满怎么想。但我总是慢一拍）', inner:true, vol:.3, mood:'犹豫'},
+    {s:'mom',  ts:'03:04', tx:'行了行了，先吃饭，这事过两天再说。', vol:.62, mood:'中性'},
+  ],
+  summary:[
+    {at:2, tx:'小满考了第九名'},
+    {at:6, tx:'妈提出：小满转学，请二姨夫打听'},
+    {at:7, tx:'学区房名额紧，需有心理准备'},
+    {at:9, tx:'爸：先看能否排上，钱的事后说'},
+    {at:10,tx:'小满明确反对转学'},
+    {at:14,tx:'话题被压下，转学一事未决'},
+  ],
+  todos:[
+    {at:6, t:'请二姨夫打听转学名额', m:'妈 · 待二姨回复', state:'done'},
+    {at:7, t:'确认学区房是否有空位', m:'未指定 · 需先有结果', state:'warn'},
+    {at:10,t:'听小满自己怎么想', m:'我 · 会后单独聊', state:'done'},
+  ],
+  sugg:[
+    {at:0,  tx:'刚坐下，先看一圈谁坐在哪。'},
+    {at:3,  tx:'二姨在连问。<b>可以问：小满你自己想说什么？</b>'},
+    {at:5,  tx:'气氛缓下来了。<b>可以接：转学的事我想听听孩子的意见。</b>'},
+    {at:11, tx:'小孩情绪紧张。<b>这时插话不会被嫌打断。</b>'},
+  ],
+  phrases:[
+    '我刚没听清，能再说一遍吗？',
+    '小满你自己怎么想？我想听你说。',
+    '这个事我们回头单独聊，先吃饭。',
+    '二姨，你刚才说的学区房，是哪个片区？',
+    '我先记一下，别漏了。',
+  ],
+  events:[
+    {at:1,  lv:0, tt:'AMBIENT', ms:'碗筷碰撞声 · 已抑制'},
+    {at:3,  lv:3, tt:'OVERLAP', ms:'二姨与小满重叠 1.8 秒 · 已标注'},
+    {at:9,  lv:2, tt:'RISK',    ms:'检测到「学区房」关键词 · 金额敏感话题'},
+    {at:10, lv:3, tt:'EMOTION', ms:'小满情绪升高（音量 0.95）· 建议先安抚'},
+  ],
+  hands:['转学','生日','第九名','学区房','朋友','再问','不转','先吃饭'],
+  archive:{
+    title:'聚餐场 · 圆桌对话档案', en:'SOUND FIELD ARCHIVE / DINNER TABLE',
+    meta:[['同桌','5 人'],['时长',null],['语句',null],['待跟进',null]],
+    sections:['同桌的人','对话全程记录','聊出来的结论','待跟进的事','重点标记','未能分离的片段'],
+  },
+  doneLabel:'待跟进',
+  hasOverlap:true,
+},
+
+/* ================= ROOM 03 出行场 ================= */
+trip:{
+  no:'03', name:'出行场', tag:'户外场景', ill:'trip',
+  desc:'环境音预警 · 方位提示 · 出行安全',
+  fieldTitle:'方位声场', fieldSub:'03', subTitle:'听到的声音',
+  legend1:'方位光点 = 声源方向', legend2:'危险 / 提示音',
+  people:{
+    front:{name:'前方车流', role:'12 点', short:'前', x:50, y:14, color:'#F472B6', tags:['持续噪声','低速']},
+    right:{name:'右后方',   role:'4 点', short:'右', x:84, y:62, color:'#F43F5E', tags:['电动车','逼近']},
+    left: {name:'左前方',   role:'10 点',short:'左', x:16, y:44, color:'#FBBF24', tags:['公交进站','中']},
+    back: {name:'正后方',   role:'6 点', short:'后', x:50, y:86, color:'#A78BFA', tags:['同伴说话','近']},
+  },
+  terms:{
+    '盲区':'司机看不到的那一块',
+    '右后':'你的右后方，最容易出事的方向',
+    '左前方':'你的左前方向，不用转头就能看到',
+    '右后方':'你的右后方，需要侧头确认',
+    '鸣笛':'按喇叭，通常是在提醒你要让开',
+  },
+  script:[
+    {s:'front', ts:'00:02', tx:'（持续的低频车流声，从左到右）', inner:true, vol:.6, mood:'中性'},
+    {s:'back',  ts:'00:08', tx:'（同伴）前面路口右转，慢一点。', kw:['右转'], vol:.55, mood:'中性'},
+    {s:'left',  ts:'00:15', tx:'【公交进站】左前方，中频，距离约 15 米。', term:['左前方'], vol:.7, mood:'中性',
+     cue:true, cueTxt:'公交进站后，右边会安静 2 秒'},
+    {s:'right', ts:'00:23', tx:'【电动车 · 逼近】右后方，高频，正在加速。', term:['右后方'], mark:true, vol:.96, mood:'紧张'},
+    {s:'front', ts:'00:31', tx:'（车流声减弱，路面变安静）', inner:true, vol:.4, mood:'中性', mark:true,
+     cue:true, cueTxt:'安静了 · 现在过马路最安全'},
+    {s:'back',  ts:'00:38', tx:'（同伴）我拉着你，走吧。', vol:.5, mood:'肯定', mark:true,
+     cue:true, cueTxt:'同伴在带你，可以走了'},
+    {s:'right', ts:'00:46', tx:'【检测到盲区车辆】右后方有车，但距离已拉开。', term:['盲区'], vol:.8, mood:'中性'},
+    {s:'left',  ts:'00:51', tx:'【公交关门声 + 报站广播】与右后方车声重叠 1.4 秒。', overlap:true, vol:.75, mood:'中性'},
+    {s:'back',  ts:'00:55', tx:'（同伴）到了，进门吧。', vol:.5, mood:'肯定'},
+    {s:'front', ts:'01:03', tx:'（环境安静下来，室内）', inner:true, vol:.25, mood:'肯定'},
+  ],
+  summary:[
+    {at:1, tx:'同伴提示：前面路口右转'},
+    {at:2, tx:'左前方公交进站（约 15 米）'},
+    {at:3, tx:'右后方电动车逼近 · 已高亮预警'},
+    {at:5, tx:'路面变安静，可安全通过'},
+    {at:6, tx:'右后盲区车辆已拉开距离'},
+  ],
+  todos:[
+    {at:3, t:'右后方电动车通过后再移动', m:'安全提示 · 已触发', state:'done'},
+    {at:5, t:'安全窗口：现在可以过马路', m:'同伴引导中', state:'done'},
+  ],
+  sugg:[
+    {at:0,  tx:'站在路口，先听清前后左右。'},
+    {at:2,  tx:'<b>右后方有电动车加速 —— 先站住，别动。</b>'},
+    {at:5,  tx:'<b>安静了，现在过最安全。</b>同伴在你身边。'},
+    {at:6,  tx:'可以继续走，右后车已拉开。'},
+  ],
+  phrases:[
+    '等一下，右边有车。',
+    '现在可以走了吗？',
+    '能帮我看着右边吗？',
+    '刚才那个声音是什么方向？',
+    '我们再等一个空档。',
+  ],
+  events:[
+    {at:1,  lv:0, tt:'AMBIENT', ms:'持续车流 · 低频 · 已分类'},
+    {at:2,  lv:1, tt:'CUE',     ms:'左前方公交进站 · 约 15 米'},
+    {at:3,  lv:3, tt:'DANGER',  ms:'右后方电动车 · 高频逼近 · 请站住'},
+    {at:5,  lv:0, tt:'SAFE',    ms:'车流间隔出现 · 2 秒安全窗口'},
+    {at:6,  lv:2, tt:'WATCH',   ms:'盲区车辆仍在，但距离已拉开'},
+  ],
+  hands:['右转','左前','右后','盲区','公交','电动车','站住','安全'],
+  archive:{
+    title:'出行场 · 安全声音档案', en:'SOUND FIELD ARCHIVE / STREET SAFETY',
+    meta:[['方位','4 个'],['时长',null],['记录',null],['预警',null]],
+    sections:['这一趟的方位','声音全程记录','做了什么判断','安全提示','重点标记','未能分离的片段'],
+  },
+  doneLabel:'提示',
+  hasOverlap:true,
+},
+
+/* ================= ROOM 04 居家场 ================= */
+home:{
+  no:'04', name:'居家场', tag:'居家场景', ill:'home',
+  desc:'家庭声音 · 留言备忘 · 居家安全',
+  fieldTitle:'家中声场', fieldSub:'04', subTitle:'家里发生的事',
+  legend1:'声源位置', legend2:'家电 / 门锁',
+  people:{
+    door: {name:'门',   role:'玄关', short:'门', x:20, y:24, color:'#F472B6', tags:['敲门','门铃']},
+    cook: {name:'厨房', role:'灶台', short:'厨', x:78, y:26, color:'#FBBF24', tags:['水开','油烟机']},
+    tv:   {name:'客厅', role:'电视', short:'电', x:76, y:74, color:'#A78BFA', tags:['音量偏大']},
+    mom:  {name:'妈妈', role:'主卧', short:'妈', x:26, y:72, color:'#7DD3FC', tags:['留了语音']},
+  },
+  terms:{
+    '水开':'烧水壶开了，要及时关火',
+    '烧水壶':'厨房烧水壶，鸣响=水开了，要关火',
+    '漏气':'燃气泄漏，危险',
+    '语音留言':'家里设备录下的话',
+  },
+  script:[
+    {s:'cook', ts:'00:03', tx:'【厨房】烧水壶开始鸣响，蒸汽声。', term:['烧水壶'], vol:.7, mood:'中性'},
+    {s:'mom',  ts:'00:10', tx:'【语音留言】囡囡，我出门了，锅里有汤，记得关火。', kw:['记得关火'], mark:true, vol:.6, mood:'肯定'},
+    {s:'door', ts:'00:22', tx:'【门铃】玄关门铃响了 2 声。', mark:true, vol:.85, mood:'中性',
+     cue:true, cueTxt:'门铃响完会有 3 秒安静，可以回应'},
+    {s:'tv',   ts:'00:34', tx:'【客厅】电视音量 62，偏大，盖住了门铃声。', overlap:true, vol:.9, mood:'中性'},
+    {s:'mom',  ts:'00:48', tx:'【语音留言 · 第二条】外卖放门口就行，别开门。', kw:['别开门'], mark:true, vol:.6, mood:'肯定',
+     cue:true, cueTxt:'这条说了"别开门"，是关键'},
+    {s:'cook', ts:'01:00', tx:'【厨房】烧水壶鸣响持续 45 秒，未关闭。', term:['烧水壶'], vol:.75, mood:'紧张'},
+    {s:'door', ts:'01:12', tx:'【门口】有脚步声，停留约 8 秒后离开。', vol:.65, mood:'中性',
+     cue:true, cueTxt:'人走了，可以开门看外卖'},
+    {s:'tv',   ts:'01:26', tx:'【客厅】电视音量已调到 30。', vol:.4, mood:'肯定'},
+    {s:'mom',  ts:'01:38', tx:'【语音留言 · 第三条】我十点回来，你早点睡。', vol:.55, mood:'肯定'},
+  ],
+  summary:[
+    {at:0, tx:'厨房烧水壶鸣响，需关火'},
+    {at:1, tx:'妈妈留言：锅里有汤，记得关火'},
+    {at:2, tx:'玄关门铃响 2 声'},
+    {at:3, tx:'电视音量偏大，盖住门铃声'},
+    {at:4, tx:'妈妈第二条：外卖放门口，别开门'},
+    {at:6, tx:'门口脚步停留 8 秒后离开'},
+  ],
+  todos:[
+    {at:0, t:'关掉烧水壶 / 灶台', m:'安全 · 持续鸣响', state:'warn'},
+    {at:2, t:'开门前先确认是谁', m:'门铃 · 有第二条留言说别开门', state:'done'},
+    {at:4, t:'外卖放门口，不开门', m:'妈妈留言', state:'done'},
+    {at:6, t:'等脚步声离开后再开门取餐', m:'门口 · 已离开', state:'done'},
+  ],
+  sugg:[
+    {at:0,  tx:'<b>厨房水开了，先去关火。</b>'},
+    {at:1,  tx:'妈妈留了话：锅里有汤。'},
+    {at:2,  tx:'门铃响了。<b>先别急着开，看看是谁。</b>'},
+    {at:4,  tx:'妈妈说外卖放门口 —— <b>别开门。</b>'},
+    {at:6,  tx:'人已经走了，可以开门取外卖。'},
+  ],
+  phrases:[
+    '刚才门铃响了吗？',
+    '是不是水开了？',
+    '外卖到了吗？',
+    '妈妈还说了什么？',
+    '再放一遍刚才那条留言。',
+  ],
+  events:[
+    {at:0,  lv:2, tt:'SAFETY',  ms:'厨房烧水壶鸣响 · 持续 45 秒未关'},
+    {at:2,  lv:1, tt:'DOOR',    ms:'玄关门铃 · 2 声'},
+    {at:3,  lv:2, tt:'MASKED',  ms:'电视音量 62 盖住门铃 · 已分离'},
+    {at:4,  lv:2, tt:'MESSAGE', ms:'妈妈留言：外卖放门口，别开门'},
+    {at:6,  lv:0, tt:'CLEAR',   ms:'门口脚步已离开'},
+  ],
+  hands:['关火','门铃','外卖','别开门','留言','汤','十点','脚步'],
+  archive:{
+    title:'居家场 · 家中声音档案', en:'SOUND FIELD ARCHIVE / HOME',
+    meta:[['声源','4 个'],['时长',null],['记录',null],['安全提示',null]],
+    sections:['家里的人与物','声音全程记录','听出来的事','安全与待办','重点留言','未能分离的片段'],
+  },
+  doneLabel:'待办',
+  hasOverlap:true,
+},
+};
+
+/* ---------------- 运行时状态 ---------------- */
+let R = null;      // 当前房间数据
+let pk = 'meet';    // 当前房间 key
+let view='lobby', idx=-1, playing=false, timer=null, cueTimer=null;
+let heatOn=false, envOn=true, rotOn=false, view3d=true, mv='live';
+let fontSize='m', focusOn=false, recentOn=false;
+const marked=new Set();
+
+function P(){ return R.people; }
+function SCRIPT(){ return R.script; }
+const TOTAL = () => R.script.length;
+
+/* ---------------- 主题 / 无障碍 ---------------- */
+function toggleTheme(){
+  const h=document.documentElement, d=h.dataset.theme==='dark';
+  h.dataset.theme=d?'light':'dark';
+  $('#themeBtn2').textContent=d?'深色':'浅色';
+  toast(d?'浅色模式':'深色模式');
+}
+function toggleContrast(){
+  const h=document.documentElement, on=h.dataset.contrast==='high';
+  h.dataset.contrast=on?'normal':'high';
+  $('#contrastBtn').classList.toggle('act',!on);
+  toast(on?'标准对比':'高对比 · 低视力友好');
+}
+const SIZES=['s','m','l','xl'], SIZE_LABEL={s:'小',m:'中',l:'大',xl:'超大'};
+function setSize(s){
+  fontSize=s; document.documentElement.dataset.size=s;
+  $('#sizeLabel').textContent=SIZE_LABEL[s];
+  $$('#sizeBtns button').forEach(b=>b.classList.toggle('act', b.dataset.size===s));
+  toast('字号 · '+SIZE_LABEL[s]);
+}
+let tt2;
+function toast(msg){
+  $('#toastMsg').textContent=msg;
+  $('#toast').classList.add('show');
+  clearTimeout(tt2); tt2=setTimeout(()=>$('#toast').classList.remove('show'),2000);
+}
+
+/* ---------------- 大厅 ---------------- */
+function buildLobby(){
+  const box=$('#rooms'); box.innerHTML='';
+  Object.entries(DATA).forEach(([k,d])=>{
+    const c=el('div','roomcard');
+    c.innerHTML=`<div class="rc-ill">${ILL[d.ill]}</div>
+      <div class="rc-head"><span class="rc-no">ROOM — ${d.no}</span>
+        <span class="rc-state live"><i class="d"></i>有档案</span></div>
+      <div class="rc-name">${d.name}</div><div class="rc-desc">${d.desc}</div>
+      <div class="rc-foot"><span class="rc-tag">${d.tag}</span>
+        <span class="rc-go">进入房间 <span>→</span></span></div>`;
+    c.onclick=()=>enterRoom(k);
+    box.appendChild(c);
+  });
+}
+
+/* ---------------- 进入房间 ---------------- */
+function enterRoom(k){
+  pk=k; R=DATA[k];
+  pause();
+  ['#lobby','#archive'].forEach(s=>$(s).classList.remove('on'));
+  $('#room').classList.add('on'); view='room';
+  resetRoom();
+  setTimeout(()=>{
+    buildField(); buildAnalysis(); buildSubflow(); buildTrack(); buildToggleList();
+    if(!playing) start();
+  },120);
+}
+function resetRoom(){
+  idx=-1; playing=false; clearTimeout(timer); clearTimeout(cueTimer);
+  marked.clear(); heatOn=false; envOn=true; rotOn=false; view3d=true;
+  document.body.classList.remove('focusmode'); focusOn=false;
+  $('#roomNo').textContent=R.no; $('#roomName').textContent=R.name;
+  $('#fieldTitle').textContent=R.fieldTitle; $('#fieldSub').textContent=R.fieldSub;
+  $('#subTitle').textContent=R.subTitle;
+  $('#legend1').textContent=R.legend1; $('#legend2').textContent=R.legend2;
+  $('#spkCount').textContent=Object.keys(R.people).length;
+  $('#subflow').innerHTML=''; $('#anal').innerHTML='';
+  $('#alerts').innerHTML=''; $('#overlapBox').innerHTML='';
+  $('#playBtn').textContent='▶ 开始'; $('#elapsed').textContent='00:00';
+  setCue(null);
+  $('#bigcap').classList.remove('inneronly');
+  $$('.modeswitch button').forEach(b=>b.classList.toggle('act', b.dataset.mode==='live'));
+  $$('.switchbar button').forEach(b=>b.classList.toggle('act', b.dataset.view==='3d'));
+  $('#mviews').classList.remove('on');
+  mv='live'; $$('.viewnav button').forEach(b=>b.classList.toggle('act', b.dataset.mv==='live'));
+  $('#capTx').textContent='等待声音输入…'; $('#capWho').innerHTML='';
+}
+
+/* ---------------- 场景构建 ---------------- */
+function buildField(){
+  const ppl=P();
+  const s2=$('#scene2d'), s3=$('#room3d');
+  // 清空上一房间的全部残留（形状 / 光点 / 热力 / 声柱）
+  s2.querySelectorAll('.s2-shape,.dot,.heat').forEach(n=>{
+    if(n.parentNode) n.parentNode.removeChild(n);
+  });
+  s3.querySelectorAll('.spk3d,.heat').forEach(n=>{
+    if(n.parentNode) n.parentNode.removeChild(n);
+  });
+  const shape=el('div','s2-shape');
+  if(pk==='meet'){ shape.style.cssText='left:18%;top:25%;width:64%;height:44%;border-radius:16px'; }
+  else if(pk==='dine'){ shape.style.cssText='left:26%;top:28%;width:48%;height:40%;border-radius:50%'; }
+  else if(pk==='trip'){ shape.style.cssText='left:38%;top:30%;width:24%;height:34%;border-radius:50%;background:var(--paper-2)'; }
+  else { shape.style.cssText='left:10%;top:14%;width:80%;height:70%;border-radius:10px;background:transparent;box-shadow:none;border-style:dashed'; }
+  s2.appendChild(shape);
+  Object.entries(ppl).forEach(([k,p])=>{
+    const d=el('div','dot'); d.dataset.k=k; d.style.left=p.x+'%'; d.style.top=p.y+'%';
+    d.innerHTML=`<div class="core"></div><span class="nm">${p.name}</span>`;
+    s2.appendChild(d);
+  });
+  // 3D
+  const desk=$('#room3d').querySelector('.desk3d');
+  if(desk) desk.style.borderRadius = pk==='dine'?'50%' : '14px';
+  Object.entries(ppl).forEach(([k,p])=>{
+    const d=el('div','spk3d'); d.dataset.k=k;
+    const px=(p.x/100)*232+9, pz=(p.y/100)*150+10;
+    d.style.cssText=`position:absolute;left:${px}px;top:${pz}px`;
+    d.innerHTML=`<div class="inner">
+      <div class="wv"></div><div class="wv"></div><div class="beam"></div>
+      <div class="base"><span class="face2">${p.short}</span></div>
+      <div class="tag3d"><span class="lb">${p.name}</span></div></div>`;
+    s3.appendChild(d);
+  });
+}
+function setSpeaker(k){
+  $$('.dot').forEach(d=>d.classList.toggle('on', d.dataset.k===k));
+  $$('.spk3d').forEach(d=>{
+    const on=d.dataset.k===k;
+    d.classList.toggle('on',on);
+    const beam=d.querySelector('.beam');
+    if(beam){
+      if(on){
+        const cur=SCRIPT()[Math.max(0,idx)];
+        beam.style.height=(30+((cur&&cur.vol)||.6)*78)+'px';
+      } else beam.style.height='0px';
+    }
+  });
+  const d2=document.querySelector(`.dot[data-k="${k}"]`);
+  if(d2){ const r=el('div','ripple'); d2.appendChild(r); setTimeout(()=>r.remove(),1600); }
+}
+
+/* ---------------- 字幕 ---------------- */
+function renderText(it){
+  let tx=it.tx;
+  if(it.term) it.term.forEach(t=>{ if(TERMS()[t]) tx=tx.replace(t,`<span class="term" data-term="${t}">${t}</span>`); });
+  if(it.kw) it.kw.forEach(k=>{ if(!tx.includes('data-term')) tx=tx.replace(k,`<span class="kw">${k}</span>`); });
+  return tx;
+}
+function TERMS(){ return R.terms; }
+
+function buildSubflow(){
+  const flow=$('#subflow'); flow.innerHTML='';
+  SCRIPT().forEach((it,i)=>{
+    const sp=P()[it.s];
+    const row=el('div','sfl'); row.dataset.i=i;
+    row.innerHTML=`<span class="t">${it.ts.slice(3)}</span>
+      <span class="av" style="background:${sp.color}">${sp.short}</span>
+      <span class="b"><span class="n">${sp.name}</span><span class="x">${renderText(it)}</span>
+      ${it.overlap?'<span class="badge ov">重叠</span>':''}
+      ${it.mark?'<span class="badge mk">重点</span>':''}
+      ${it.inner?'<span class="badge wn">内心</span>':''}</span>`;
+    flow.appendChild(row);
+  });
+  flow.querySelectorAll('.term').forEach(n=>{
+    n.onmouseenter=()=>showTermTip(n); n.onmouseleave=hideTermTip;
+    n.onclick=e=>{ e.stopPropagation(); showTermTip(n); };
+  });
+}
+let tipT;
+function showTermTip(node){
+  const t=node.dataset.term, def=TERMS()[t];
+  if(!def) return;
+  const tip=$('#termtip');
+  tip.textContent=`${t} = ${def}`;
+  const r=node.getBoundingClientRect();
+  tip.style.left=Math.max(12,r.left)+'px';
+  tip.style.top=(r.bottom+6)+'px';
+  tip.classList.add('on');
+  clearTimeout(tipT); tipT=setTimeout(()=>tip.classList.remove('on'),4200);
+}
+function hideTermTip(){ clearTimeout(tipT); $('#termtip').classList.remove('on'); }
+
+function renderAlerts(i){
+  const box=$('#alerts'); box.innerHTML='';
+  (R.events||[]).filter(e=>e.at<=i).slice(-2).forEach(e=>{
+    const d=el('div','alert lv'+(e.lv||0));
+    d.innerHTML=`<span class="t">${e.tt}</span><span class="d">${e.ms}</span>`;
+    box.appendChild(d);
+  });
+  const ob=$('#overlapBox'); ob.innerHTML='';
+  if(!R.hasOverlap) return;
+  SCRIPT().slice(0,i+1).filter(x=>x.overlap).forEach(x=>{
+    const d=el('div','alert lv3');
+    d.innerHTML=`<span class="t">⚠ OVERLAP ${x.ts}</span>
+      <span class="d"><b>${P()[x.s].name}</b> 与其他声音重叠 · 已标注，可回看</span>`;
+    ob.appendChild(d);
+  });
+}
+
+/* ---------------- 抢话 ---------------- */
+function setCue(it){
+  const cue=$('#turncue'), ring=$('#cueRing'), cnt=$('#cueCnt');
+  const T=100.5;
+  clearTimeout(cueTimer);
+  if(!it||!it.cue){
+    cue.classList.remove('urgent','now');
+    ring.style.strokeDashoffset=T;
+    cnt.textContent='—';
+    $('#cueT').textContent = idx<0?'等待开始':'暂无可插入的窗口';
+    $('#cueS').textContent = '提前 2 秒提示';
+    $('#cueBtn').style.display='none';
+    return;
+  }
+  cue.classList.add('urgent'); cue.classList.remove('now');
+  $('#cueT').textContent = it.cueTxt || '即将出现窗口';
+  $('#cueS').textContent = '准备';
+  cnt.textContent='2';
+  ring.style.strokeDashoffset=T*0.5;
+  setTimeout(()=>{ if(cue.classList.contains('urgent')){ cnt.textContent='1'; ring.style.strokeDashoffset=T*0.85; } },700);
+  cueTimer=setTimeout(()=>{
+    cue.classList.remove('urgent'); cue.classList.add('now');
+    cnt.textContent='说';
+    ring.style.strokeDashoffset=0;
+    $('#cueT').textContent = pk==='trip' ? '现在！可以走' : (pk==='home' ? '现在！可以回应' : '现在！可以说');
+    $('#cueS').textContent = '窗口已开';
+    $('#cueBtn').style.display='inline-flex';
+    $('#cueBtn').textContent = pk==='trip'?'走':(pk==='home'?'应':'说');
+  },1400);
+}
+
+/* ---------------- 右栏 ---------------- */
+function buildAnalysis(){
+  const ppl=P();
+  $('#anal').innerHTML=`
+    <div class="acard"><div class="ah">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l2.5 1.5"/></svg>
+      <h4>${pk==='trip'?'判断摘要':'语义摘要'}</h4><span class="ct" id="ctSum">0</span></div>
+      <div class="ab" id="sumBody"></div></div>
+    <div class="acard"><div class="ah">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round"><path d="M9 12l2.2 2.2L16 9.5"/><rect x="3.5" y="4" width="17" height="16" rx="3"/></svg>
+      <h4>${R.doneLabel}</h4><span class="ct" id="ctTodo">0</span></div>
+      <div class="ab" id="todoBody"></div></div>
+    <div class="acard"><div class="ah">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#F472B6" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0112 0"/><path d="M17 11h5M19.5 8v6"/></svg>
+      <h4>${pk==='trip'?'方位卡':(pk==='home'?'声源卡':'人物卡')}</h4><span class="ct">WHO</span></div>
+      <div class="ab people" id="peopleBody"></div></div>
+    <div class="acard"><div class="ah">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7DD3FC" stroke-width="2" stroke-linecap="round"><path d="M21 12a8 8 0 01-8 8H7l-4 2 1.5-4A8 8 0 1121 12z"/></svg>
+      <h4>${pk==='trip'?'可说 / 可做':(pk==='home'?'想说什么':'开口话术')}</h4><span class="ct">TAP</span></div>
+      <div class="ab phrases" id="phraseBody"></div></div>`;
+  const box=$('#peopleBody');
+  Object.entries(ppl).forEach(([k,p])=>{
+    const d=el('div','person'); d.dataset.k=k;
+    d.innerHTML=`<span class="av" style="background:${p.color}">${p.short}</span>
+      <span class="info"><span class="nm">${p.name}
+        ${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</span>
+      <span class="rl">${p.role}</span></span>`;
+    box.appendChild(d);
+  });
+  const pb=$('#phraseBody');
+  R.phrases.forEach(t=>{
+    const b=el('button','phrase');
+    b.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#F472B6" stroke-width="2" stroke-linecap="round"><path d="M8 12h8M8 8h8M8 16h5"/><rect x="2.5" y="3.5" width="19" height="17" rx="4"/></svg><span>${t}</span>`;
+    b.onclick=()=>toast('已复制 · 可直接用');
+    pb.appendChild(b);
+  });
+}
+function renderAnalysis(upto){
+  const sb=$('#sumBody'); if(!sb) return;
+  const want=R.summary.filter(x=>x.at<=upto);
+  if(sb.children.length!==want.length){
+    sb.innerHTML='';
+    want.forEach(x=>{
+      const p=el('div','pt'); p.innerHTML=`<span class="b"></span><span>${x.tx}</span>`;
+      sb.appendChild(p); requestAnimationFrame(()=>p.classList.add('on'));
+    });
+    $('#ctSum').textContent=want.length;
+  }
+  const tb=$('#todoBody');
+  const wt=R.todos.filter(x=>x.at<=upto);
+  if(tb.children.length!==wt.length){
+    tb.innerHTML='';
+    wt.forEach(x=>{
+      const d=el('div','todo '+(x.state==='warn'?'warn':'done'));
+      d.innerHTML=`<span class="ck">${x.state==='warn'?'!':'✓'}</span>
+        <span class="body"><span class="t">${x.t}</span><span class="m">${x.m}</span></span>`;
+      tb.appendChild(d); requestAnimationFrame(()=>d.classList.add('on'));
+    });
+    $('#ctTodo').textContent=wt.length;
+  }
+  const cur=SCRIPT()[upto];
+  $$('#peopleBody .person').forEach(p=>p.classList.toggle('on', cur&&p.dataset.k===cur.s));
+}
+
+/* ---------------- 播放 ---------------- */
+function start(){
+  if(playing) return;
+  playing=true; $('#playBtn').textContent='⏸ 暂停'; tick();
+}
+function pause(){ playing=false; clearTimeout(timer); clearTimeout(cueTimer); $('#playBtn').textContent='▶ 继续'; }
+function tick(){
+  if(!playing) return;
+  if(idx>=TOTAL()-1){ pause(); $('#playBtn').textContent='✓ 已结束'; toast('已结束 · 可切「档案」'); return; }
+  idx++; paint(idx); timer=setTimeout(tick,3000);
+}
+function seekTo(i){
+  i=Math.max(0,Math.min(TOTAL()-1,i));
+  idx=i; paint(i);
+  if(playing){ clearTimeout(timer); timer=setTimeout(tick,3200); }
+}
+function paint(i){
+  const it=SCRIPT()[i], sp=P()[it.s];
+  $('#capWho').innerHTML=`<span class="av" style="background:${sp.color}">${sp.short}</span>
+    <span class="nm">${it.inner?sp.name+'（内心）':sp.name}</span>
+    <span class="rl">${sp.role}</span><span class="ts">${it.ts}</span>`;
+  $('#capTx').innerHTML=renderText(it);
+  $('#capTx').querySelectorAll('.term').forEach(n=>{
+    n.onmouseenter=()=>showTermTip(n); n.onmouseleave=hideTermTip;
+  });
+  $('#bigcap').classList.toggle('inneronly', !!it.inner);
+  $$('#subflow .sfl').forEach(r=>r.classList.toggle('cur', +r.dataset.i===i));
+  const curEl=$(`#subflow .sfl[data-i="${i}"]`);
+  if(curEl) curEl.scrollIntoView({block:'nearest',behavior:'smooth'});
+  setCue(it); setSpeaker(it.s);
+  renderAnalysis(i); renderAlerts(i);
+  const pct=TOTAL()>1?(i/(TOTAL()-1))*100:0;
+  $('#fill').style.width=pct+'%'; $('#head').style.left=pct+'%';
+  $('#tmCur').textContent=it.ts; $('#elapsed').textContent=it.ts;
+  $$('.track .pt2').forEach(d=>{
+    d.classList.toggle('hit', +d.dataset.i<=i);
+    d.classList.toggle('mk', marked.has(+d.dataset.i));
+  });
+  if(heatOn) renderHeat();
+  if(mv!=='live') renderMView(mv,i);
+}
+
+function buildTrack(){
+  const t=$('#track');
+  t.querySelectorAll('.pt2').forEach(n=>n.remove());
+  SCRIPT().forEach((s,i)=>{
+    const d=el('div','pt2'); d.dataset.i=i; d.style.left=(i/(TOTAL()-1))*100+'%'; t.appendChild(d);
+  });
+  $('#tmTot').textContent=SCRIPT()[TOTAL()-1].ts;
+  let dragging=false;
+  const move=e=>{
+    if(!dragging) return;
+    const r=t.getBoundingClientRect();
+    const x=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));
+    seekTo(Math.round(x*(TOTAL()-1)));
+  };
+  t.onmousedown=e=>{ dragging=true; move(e); };
+  t.onclick=e=>{
+    const r=t.getBoundingClientRect();
+    seekTo(Math.round(Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*(TOTAL()-1)));
+  };
+  const W=typeof window!=='undefined'&&window.addEventListener?window:null;
+  if(W){ W.addEventListener('mousemove',move); W.addEventListener('mouseup',()=>dragging=false); }
+}
+
+function renderHeat(){
+  const container=view3d?$('#room3d'):$('#scene2d');
+  container.querySelectorAll('.heat').forEach(n=>n.remove());
+  if(!heatOn) return;
+  const cnt={}; SCRIPT().slice(0,idx+1).forEach(x=>cnt[x.s]=(cnt[x.s]||0)+1);
+  const max=Math.max(1,...Object.values(cnt));
+  Object.entries(cnt).forEach(([k,c])=>{
+    const p=P()[k]; if(!p) return;
+    const d=el('div','heat'), r=34+(c/max)*46;
+    if(view3d){
+      const px=(p.x/100)*232+9, pz=(p.y/100)*150+10;
+      d.style.cssText=`position:absolute;left:${px-r/2}px;top:${pz-r/2}px;width:${r}px;height:${r}px`;
+    } else {
+      d.style.cssText=`position:absolute;left:${p.x}%;top:${p.y}%;width:${r}px;height:${r}px;margin:${-r/2}px 0 0 ${-r/2}px`;
+    }
+    container.appendChild(d);
+  });
+}
+
+/* ---------------- 多视图 ---------------- */
+function setMView(name){
+  mv=name;
+  $$('.viewnav button').forEach(b=>b.classList.toggle('act', b.dataset.mv===name));
+  const box=$('#mviews');
+  if(name==='live'){ box.classList.remove('on'); return; }
+  box.classList.add('on');
+  ['Overview','Timeline','Insight','Access'].forEach(k=>{
+    const n=$('#mv'+k); if(n) n.style.display='none';
+  });
+  const map={overview:'Overview',timeline:'Timeline',insight:'Insight',access:'Access'};
+  const n=$('#mv'+map[name]); if(n) n.style.display='flex';
+  renderMView(name,Math.max(0,idx));
+}
+function renderMView(name,i){
+  if(name==='overview'){
+    const dur=i>=0?SCRIPT()[i].ts:'00:00';
+    $('#ovDur').innerHTML=dur.split(':')[1]+'<span class="u">s</span>';
+    $('#ovDurSub').textContent='已进行 '+dur+' · '+Object.keys(P()).length+' 个声源';
+    $('#ovSeg').textContent=i+1;
+    $('#ovTodoLabel').textContent=R.doneLabel;
+    $('#ovListTitle').textContent=R.doneLabel+'闭环';
+    $('#ovTodo').textContent=R.todos.filter(x=>x.at<=i).length;
+    const cnt={}; SCRIPT().slice(0,i+1).forEach(x=>cnt[x.s]=(cnt[x.s]||0)+1);
+    const max=Math.max(1,...Object.values(cnt));
+    const bars=$('#ovBars'); bars.innerHTML='';
+    Object.entries(P()).forEach(([k,p])=>{
+      const c=cnt[k]||0, row=el('div','barrow');
+      row.innerHTML=`<span class="nm">${p.name}</span><span class="rail"><i></i></span><span class="vv">${c} 句</span>`;
+      bars.appendChild(row);
+      requestAnimationFrame(()=>{ row.querySelector('i').style.width=(c/max*100)+'%'; });
+    });
+    const vals=Object.keys(P()).map(k=>cnt[k]||0);
+    const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
+    const sd=Math.sqrt(vals.reduce((a,b)=>a+(b-mean)**2,0)/vals.length);
+    const cv=mean>0?sd/mean:0, bal=Math.max(0,Math.min(100,Math.round(100-cv*100)));
+    $('#ovBal').innerHTML=bal+'<span class="u">/100</span>';
+    $('#ovBalSub').textContent=bal>60?'分布较均衡':'集中在 1–2 个声源';
+    const tl=$('#ovTodoList'); tl.innerHTML='';
+    R.todos.filter(x=>x.at<=i).forEach(x=>{
+      const row=el('div','barrow');
+      row.innerHTML=`<span class="nm" style="width:auto;flex:1">${x.t}</span>
+        <span class="vv" style="width:auto;color:${x.state==='warn'?'#EC4899':'#0E9F6E'}">${x.state==='warn'?'待定':'已定'}</span>`;
+      tl.appendChild(row);
+    });
+  }
+  if(name==='timeline'){
+    const list=$('#mvEvts'); list.innerHTML='';
+    (R.events||[]).filter(e=>e.at<=i).forEach(e=>{
+      const d=el('div','evt lv'+(e.lv||0));
+      d.innerHTML=`<span class="t">${SCRIPT()[e.at].ts}</span><span class="d">${e.ms}</span>`;
+      list.appendChild(d);
+    });
+    SCRIPT().slice(0,i+1).filter(x=>x.mark).forEach(x=>{
+      const d=el('div','evt lv1');
+      d.innerHTML=`<span class="t">${x.ts}</span><span class="d">重点 · ${P()[x.s].name}</span>`;
+      list.appendChild(d);
+    });
+    marked.forEach(mi=>{
+      const d=el('div','evt lv1');
+      d.innerHTML=`<span class="t">${SCRIPT()[mi].ts}</span><span class="d">我的标记 · 需回看</span>`;
+      list.appendChild(d);
+    });
+    drawMood(i);
+  }
+  if(name==='insight'){
+    const cloud=$('#mvCloud'); cloud.innerHTML='';
+    const kws=[];
+    SCRIPT().slice(0,i+1).forEach(x=>{ if(x.kw) x.kw.forEach(k=>{ if(!kws.includes(k)) kws.push(k); }); });
+    kws.forEach((k,n)=>{
+      const s=el('span'); s.textContent=k;
+      s.style.fontSize=(14+Math.max(0,7-n))+'px';
+      s.style.fontWeight=n<3?'800':'600';
+      cloud.appendChild(s);
+    });
+    if(!kws.length) cloud.innerHTML='<span style="border:none;background:none;color:var(--ink-4)">暂无关键词</span>';
+    const sl=$('#mvSugg'); sl.innerHTML='';
+    R.sugg.filter(x=>x.at<=i).forEach(x=>{ const d=el('div','scard'); d.innerHTML=x.tx; sl.appendChild(d); });
+  }
+  if(name==='access'){
+    const hg=$('#mvHand'); hg.innerHTML='';
+    R.hands.forEach(w=>{
+      const c=el('div','hcell');
+      c.innerHTML=`<div style="font-size:25px;line-height:1;margin-bottom:5px">🤟</div>
+        <div class="w">${w}</div><div class="s">SIGN</div>`;
+      hg.appendChild(c);
+    });
+    $$('#sizeBtns button').forEach(b=>b.classList.toggle('act', b.dataset.size===fontSize));
+  }
+}
+function drawMood(upto){
+  const svg=$('#moodSvg'); if(!svg) return;
+  const n=Math.max(1,upto+1), W=240, H=90;
+  const map={'肯定':36,'中性':30,'犹豫':22,'紧张':13};
+  const pts=[];
+  SCRIPT().slice(0,upto+1).forEach((x,i)=>{
+    pts.push([(i/Math.max(1,n-1))*W, H-(map[x.mood]||28)]);
+  });
+  if(!pts.length) pts.push([0,H-30],[W,H-30]);
+  const d=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  svg.innerHTML=`<defs>
+    <linearGradient id="mg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F472B6" stop-opacity=".3"/><stop offset="1" stop-color="#8B5CF6" stop-opacity=".02"/></linearGradient>
+    <linearGradient id="ms" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F472B6"/><stop offset="1" stop-color="#8B5CF6"/></linearGradient></defs>
+    <path d="${d} L${W} ${H} L0 ${H} Z" fill="url(#mg)"/>
+    <path d="${d}" fill="none" stroke="url(#ms)" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/>`;
+}
+
+function switchFieldView(v){
+  view3d=v==='3d';
+  $('#scene3d').classList.toggle('show',view3d);
+  $('#scene2d').classList.toggle('hide',view3d);
+  $$('.switchbar button').forEach(b=>b.classList.toggle('act', b.dataset.view===v));
+  $('#axisNote').textContent=view3d?'3D · 透视房间':'2D · 俯视';
+  if(heatOn) renderHeat();
+}
+function buildToggleList(){
+  const box=$('#toggleList'); if(!box) return;
+  box.innerHTML='';
+  [
+    ['高对比模式',()=>toggleContrast()],
+    ['专注模式（只留字幕）',()=>toggleFocus()],
+    ['切换深色',()=>toggleTheme()],
+    ['字号放大',()=>setSize(fontSize==='xl'?'m':'xl')]
+  ].forEach(([label,fn])=>{
+    const b=el('button','phrase');
+    b.innerHTML=`<span style="flex:1;text-align:left">${label}</span><span style="color:var(--ink-4)">›</span>`;
+    b.onclick=fn; box.appendChild(b);
+  });
+}
+function toggleFocus(){
+  focusOn=!focusOn;
+  document.body.classList.toggle('focusmode',focusOn);
+  $('#focusBtn').classList.toggle('act',focusOn);
+  toast(focusOn?'专注模式 · 只保留字幕':'退出专注模式');
+}
+
+/* ---------------- 档案 ---------------- */
+function buildArchive(){
+  const upto=idx<0?TOTAL()-1:idx;
+  const talks=SCRIPT().slice(0,upto+1);
+  const concl=R.summary.filter(x=>x.at<=upto);
+  const todoFinal=R.todos.filter(x=>x.at<=upto);
+  const marks=talks.filter(x=>x.mark);
+  const overlaps=talks.filter(x=>x.overlap);
+  const A=R.archive;
+  const metaVals=[Object.keys(P()).length+' 个', SCRIPT()[upto].ts, talks.length+' 条',
+    todoFinal.length+' 项'];
+  const secNames=A.sections;
+
+  $('#paper').innerHTML=`
+    <div class="ar-head"><span class="l">SOUNDTRACE. 声场档案</span>
+      <span class="r">ROOM-${R.no} · 2026.01.04</span></div>
+    <div class="ar-title"><div class="no">ROOM — ${R.no}　${R.name}</div>
+      <h2>${A.title}</h2><div class="en">${A.en}</div></div>
+    <div class="ar-meta">
+      ${A.meta.map((m,i)=>`<div><span class="k">${m[0]}</span><span class="v">${m[1]||metaVals[i]}</span></div>`).join('')}
+    </div>
+    <div class="sec"><h3><span class="n">01</span>${secNames[0]}</h3>
+      <div style="font-family:var(--serif);font-size:15.5px;line-height:1.9;color:var(--ink-2)">
+        ${Object.entries(P()).map(([k,p])=>`${p.name}（${p.role}）`).join('　·　')}</div></div>
+    <div class="sec"><h3><span class="n">02</span>${secNames[1]}</h3>
+      ${talks.map(x=>{
+        const p=P()[x.s]; let tx=x.tx;
+        if(x.kw) x.kw.forEach(k=>{tx=tx.replace(k,`<mark>${k}</mark>`);});
+        return `<div class="rec"><span class="tt">${x.ts}</span><span class="nm">${p.name}</span><span class="tx">${tx}</span></div>`;
+      }).join('')}</div>
+    <div class="sec"><h3><span class="n">03</span>${secNames[2]}</h3>
+      ${concl.map(x=>`<div class="concl"><span class="b"></span><span>${x.tx}</span></div>`).join('')}</div>
+    <div class="sec"><h3><span class="n">04</span>${secNames[3]}</h3>
+      ${todoFinal.map(x=>`<div class="task"><span class="c ${x.state==='warn'?'':'done'}">${x.state==='warn'?'!':'✓'}</span>
+        <span><span>${x.t}</span><span class="m">${x.m}</span></span></div>`).join('')}</div>
+    ${marks.length?`<div class="sec"><h3><span class="n">05</span>${secNames[4]}</h3><div class="marks">
+      ${marks.map(x=>`<div class="mkrow"><span class="d"></span><span class="t">${x.ts}</span>
+        <span>${P()[x.s].name}：${x.tx}</span></div>`).join('')}</div></div>`:''}
+    ${overlaps.length?`<div class="sec"><h3><span class="n">06</span>${secNames[5]}</h3><div class="marks">
+      ${overlaps.map(x=>`<div class="mkrow"><span class="d" style="background:#F43F5E"></span><span class="t">${x.ts}</span>
+        <span>${P()[x.s].name} 与其他声音重叠 · 建议回听原音频</span></div>`).join('')}</div></div>`
+    :`<div class="sec"><h3><span class="n">06</span>${secNames[5]}</h3><div class="marks">
+      <div class="mkrow"><span class="d" style="background:#34D399"></span><span class="t">—</span>
+        <span>本场没有检测到重叠发声，全部语句均可确认真实说话人</span></div></div></div>`}
+    <div class="ar-foot"><span class="p">声迹生成 · ROOM-${R.no} ${R.name}</span><span class="p">PAGE 1 / 1</span></div>`;
+}
+function goArchive(){
+  if(!R) return;
+  pause(); buildArchive();
+  $('#room').classList.remove('on'); $('#archive').classList.add('on'); view='archive';
+  toast('已生成静态档案');
+}
+function backToLive(){
+  $('#archive').classList.remove('on'); $('#room').classList.add('on'); view='room';
+  $$('.modeswitch button').forEach(x=>x.classList.toggle('act', x.dataset.mode==='live'));
+}
+
+/* ---------------- 事件 ---------------- */
+$('#themeBtn').onclick=toggleTheme;
+$('#themeBtn2').onclick=toggleTheme;
+$('#contrastBtn').onclick=toggleContrast;
+$('#backBtn').onclick=()=>{
+  pause(); $('#room').classList.remove('on'); $('#archive').classList.remove('on');
+  $('#lobby').classList.add('on'); view='lobby';
+};
+$('#playBtn').onclick=()=>{ playing?pause():start(); };
+$('#exportBtn').onclick=goArchive;
+$('#archive').onclick=e=>{ if(e.target.closest('.printbtn')||e.target.closest('.paper')) return; backToLive(); };
+$('#printBtn').onclick=()=>{ toast('按 Ctrl+P 存为 PDF'); setTimeout(()=>window.print(),400); };
+$('#focusBtn').onclick=toggleFocus;
+$('#markBtn').onclick=()=>{
+  if(idx<0){ toast('先开始'); return; }
+  marked.add(idx);
+  const d=$(`#subflow .sfl[data-i="${idx}"]`);
+  if(d && !d.querySelector('.badge.mk')){
+    const s=el('span','badge mk'); s.textContent='我的标记'; d.querySelector('.b').appendChild(s);
+  }
+  toast('已标记 '+SCRIPT()[idx].ts+' · 档案会收录');
+};
+$('#recentBtn').onclick=()=>{
+  if(idx<0){ toast('先开始'); return; }
+  recentOn=!recentOn;
+  $('#recentBtn').classList.toggle('act',recentOn);
+  const from=Math.max(0,idx-2);
+  toast(recentOn?`只显示最近 30 秒（${SCRIPT()[from].ts} 起）`:'显示全部');
+  $$('#subflow .sfl').forEach(r=>{
+    r.style.display = recentOn && +r.dataset.i<from ? 'none' : 'flex';
+  });
+  const curEl=$(`#subflow .sfl[data-i="${idx}"]`);
+  if(curEl) curEl.scrollIntoView({block:'center'});
+};
+$('#cueBtn').onclick=()=>{
+  toast(pk==='trip'?'可以走了 · 注意右后方':'麦克风已开 · 请说');
+  const cue=$('#turncue');
+  cue.classList.remove('now','urgent');
+  $('#cueS').textContent='已响应';
+  $('#cueBtn').style.display='none';
+};
+$('#sizeBtn').onclick=()=>setSize(SIZES[(SIZES.indexOf(fontSize)+1)%4]);
+$$('#sizeBtns button').forEach(b=>b.onclick=()=>setSize(b.dataset.size));
+$$('.modeswitch button').forEach(b=>{
+  b.onclick=()=>{
+    $$('.modeswitch button').forEach(x=>x.classList.remove('act')); b.classList.add('act');
+    if(b.dataset.mode==='archive') goArchive();
+  };
+});
+$('#envBtn').onclick=()=>{ envOn=!envOn; $('#envBtn').classList.toggle('act',envOn);
+  toast(envOn?'环境音监测已开启':'环境音监测已关闭'); };
+$('#heatBtn').onclick=()=>{ heatOn=!heatOn; $('#heatBtn').classList.toggle('act',heatOn); renderHeat(); };
+$('#rotBtn').onclick=()=>{
+  rotOn=!rotOn; $('#rotBtn').classList.toggle('act',rotOn);
+  const r=$('#room3d');
+  r.style.transition='transform 3.4s linear';
+  r.style.transform=rotOn?'rotateX(56deg) rotateZ(324deg)':'rotateX(56deg) rotateZ(-36deg)';
+  setTimeout(()=>{ r.style.transition='transform .7s cubic-bezier(.2,.9,.3,1)'; },3500);
+  toast(rotOn?'旋转中 · 声柱始终垂直':'恢复视角');
+};
+$$('.switchbar button').forEach(b=>b.onclick=()=>switchFieldView(b.dataset.view));
+$$('.viewnav button').forEach(b=>b.onclick=()=>setMView(b.dataset.mv));
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='+'||e.key==='='){ setSize(SIZES[Math.min(3,SIZES.indexOf(fontSize)+1)]); return; }
+  if(e.key==='-'){ setSize(SIZES[Math.max(0,SIZES.indexOf(fontSize)-1)]); return; }
+  if(e.code==='Space'){ e.preventDefault(); if(view==='room'){ playing?pause():start(); } }
+  if(e.code==='ArrowRight'&&view==='room'){ e.preventDefault(); seekTo(Math.max(0,idx)+1); }
+  if(e.code==='ArrowLeft'&&view==='room'){ e.preventDefault(); seekTo(Math.max(0,idx-1)); }
+  if(['1','2','3','4','5'].includes(e.key)&&view==='room'){ setMView(['live','overview','timeline','insight','access'][+e.key-1]); }
+  if(e.key==='f'||e.key==='F'){ if(view==='room') toggleFocus(); }
+  if(e.key==='a'||e.key==='A'){ if(view==='room') goArchive(); else if(view==='archive') backToLive(); }
+  if(e.key==='d'||e.key==='D') toggleTheme();
+  if(e.key==='Escape'){
+    if(view!=='lobby'){ pause(); $('#room').classList.remove('on'); $('#archive').classList.remove('on');
+      $('#lobby').classList.add('on'); view='lobby'; }
+  }
+});
+
+buildLobby();
+$('#tmTot').textContent=DATA.meet.script[DATA.meet.script.length-1].ts;
+</script>
+</body>
+</html>
